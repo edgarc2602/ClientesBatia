@@ -1,5 +1,5 @@
 ﻿using System;
-namespace SistemaVentasBatia.DTOs
+namespace SistemaClientesBatia.DTOs
 {
 	public class Item<T> where T : notnull
 	{

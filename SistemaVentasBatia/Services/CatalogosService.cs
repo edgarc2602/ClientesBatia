@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using SistemaVentasBatia.Models;
-using SistemaVentasBatia.Repositories;
-using SistemaVentasBatia.DTOs;
+using SistemaClientesBatia.Models;
+using SistemaClientesBatia.Repositories;
+using SistemaClientesBatia.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SistemaVentasBatia.Enums;
+using SistemaClientesBatia.Enums;
 using Microsoft.Extensions.Options;
-using SistemaVentasBatia.Controllers;
+using SistemaClientesBatia.Controllers;
 
-namespace SistemaVentasBatia.Services
+namespace SistemaClientesBatia.Services
 {
     public interface ICatalogosService
     {

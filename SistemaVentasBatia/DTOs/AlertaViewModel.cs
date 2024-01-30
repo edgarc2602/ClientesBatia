@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SistemaVentasBatia.Enums;
+using SistemaClientesBatia.Enums;
 
-namespace SistemaVentasBatia.DTOs
+namespace SistemaClientesBatia.DTOs
 {
     public class AlertaViewModel
     {

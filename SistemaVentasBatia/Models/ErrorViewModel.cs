@@ -1,6 +1,6 @@
 using System;
 
-namespace SistemaVentasBatia.Models
+namespace SistemaClientesBatia.Models
 {
     public class ErrorViewModel
     {

@@ -10,15 +10,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using SistemaVentasBatia.Context;
-using SistemaVentasBatia.Services;
-using SistemaVentasBatia.Repositories;
-using SistemaVentasBatia.Converters;
-using SistemaVentasBatia.Middleware;
-using SistemaVentasBatia.Controllers;
+using SistemaClientesBatia.Context;
+using SistemaClientesBatia.Services;
+using SistemaClientesBatia.Repositories;
+using SistemaClientesBatia.Converters;
+using SistemaClientesBatia.Middleware;
+using SistemaClientesBatia.Controllers;
 
 
-namespace SistemaVentasBatia
+namespace SistemaClientesBatia
 {
     public class Startup
     {
@@ -62,16 +62,16 @@ namespace SistemaVentasBatia
             // Services
             services.AddScoped<ICatalogosService, CatalogosService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<IEntregaService, EntregaService>();
-            services.AddScoped<IFacturaService, FacturaService>();
-            services.AddScoped<ICuentaService, CuentaService>();
+            //services.AddScoped<IEntregaService, EntregaService>();
+            //services.AddScoped<IFacturaService, FacturaService>();
+            //services.AddScoped<ICuentaService, CuentaService>();
 
             // Repositories
             services.AddScoped<ICatalogosRepository, CatalogosRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            services.AddScoped<IEntregaRepository, EntregaRepository>();
-            services.AddScoped<IFacturaRepository, FacturaRepository>();
-            services.AddScoped<ICuentaRepository, CuentaRepository>();
+            //services.AddScoped<IEntregaRepository, EntregaRepository>();
+            //services.AddScoped<IFacturaRepository, FacturaRepository>();
+            //services.AddScoped<ICuentaRepository, CuentaRepository>();
 
 
         }

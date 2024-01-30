@@ -439,7 +439,7 @@ input[type="date"] {
     padding: 0;
     margin-bottom: 0px;
     border-bottom: 0px;
-    background-image: url('../src/login_fondo.png');
+    /*background-image: url('../src/login_fondo.png');*/
     background-size: contain;
     background-position: center center;
     background-repeat: no-repeat;

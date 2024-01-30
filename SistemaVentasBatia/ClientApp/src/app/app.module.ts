@@ -17,11 +17,8 @@ import { StoreUser } from './stores/StoreUser';
 import { CommonModule } from '@angular/common';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { fadeInOut } from './fade-in-out';
 import { DashboardComponent } from './exclusivo/dashboard/dashboard.component';
-import { EstadoDeCuentaComponent } from './exclusivo/estadodecuenta/estadodecuenta.component';
 import { EntregaComponent } from './exclusivo/entrega/entrega.component';
-import { FacturaComponent } from './exclusivo/factura/factura.component';
 import { DetalleMaterialesListadoWidget } from './widgets/detallematerialeslistado/detallematerialeslistado.widget';
 import { CargarAcuseEntregaWidget } from './widgets/cargaracuseentrega/cargaracuseentrega.widget';
 import { CargarFacturaWidget } from './widgets/cargarfactura/cargarfactura.widget';
@@ -46,9 +43,7 @@ import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
         CargarFacturaWidget,
 
         DashboardComponent,
-        EstadoDeCuentaComponent,
         EntregaComponent,
-        FacturaComponent,  
         ConfirmaWidget,
         
     ],
@@ -70,9 +65,7 @@ import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
                 children: [
                     { path: '', component: DashboardComponent, pathMatch: 'full' },
                     { path: 'entrega', component: EntregaComponent },
-                    { path: 'factura', component: FacturaComponent },
                     //{ path: 'prospecto/:id', component: ProsNuevoComponent }, ejemplo ruta a componente con id
-                    { path: 'estadodecuenta', component: EstadoDeCuentaComponent}
                 ]
             }
         ])

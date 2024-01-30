@@ -1,4 +1,4 @@
-﻿namespace SistemaVentasBatia.DTOs
+﻿namespace SistemaClientesBatia.DTOs
 {
     public class UsuarioDTO
     {

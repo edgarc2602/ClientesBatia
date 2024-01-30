@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SistemaVentasBatia.Enums;
+using SistemaClientesBatia.Enums;
 
-namespace SistemaVentasBatia.Models
+namespace SistemaClientesBatia.Models
 {
     public class UsuarioRegistro
     {

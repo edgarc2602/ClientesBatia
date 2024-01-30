@@ -1,4 +1,4 @@
-﻿namespace SistemaVentasBatia.Models
+﻿namespace SistemaClientesBatia.Models
 {
     public class Acceso
     {

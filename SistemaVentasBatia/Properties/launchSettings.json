@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "SistemaVentasBatia": {
+    "SistemaClientesBatia": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5001;http://localhost:5000",

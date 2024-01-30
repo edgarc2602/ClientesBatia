@@ -2,7 +2,7 @@
 using System;
 using System.Net;
 
-namespace SistemaVentasBatia.Controllers
+namespace SistemaClientesBatia.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

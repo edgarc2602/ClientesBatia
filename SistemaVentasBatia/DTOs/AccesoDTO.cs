@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SistemaVentasBatia.DTOs
+namespace SistemaClientesBatia.DTOs
 {
     public class AccesoDTO
     {

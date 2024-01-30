@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SistemaVentasBatia.Context
+namespace SistemaClientesBatia.Context
 {
     public class DapperContext
     {

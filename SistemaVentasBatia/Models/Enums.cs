@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SistemaVentasBatia.Enums
+namespace SistemaClientesBatia.Enums
 {
     [Flags]
     public enum Documento

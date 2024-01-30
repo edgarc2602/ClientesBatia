@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SistemaVentasBatia.DTOs;
-using SistemaVentasBatia.Services;
+using SistemaClientesBatia.DTOs;
+using SistemaClientesBatia.Services;
 
 
-namespace SistemaVentasBatia.Controllers
+namespace SistemaClientesBatia.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

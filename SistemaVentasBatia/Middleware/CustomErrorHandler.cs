@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using SistemaVentasBatia.Models;
+using SistemaClientesBatia.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-namespace SistemaVentasBatia.Middleware
+namespace SistemaClientesBatia.Middleware
 {
     public class CustomErrorHandler
     {

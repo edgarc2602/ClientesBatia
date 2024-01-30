@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SistemaVentasBatia.Models;
+using SistemaClientesBatia.Models;
 using System.Diagnostics;
 
-namespace SistemaVentasBatia.Controllers
+namespace SistemaClientesBatia.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

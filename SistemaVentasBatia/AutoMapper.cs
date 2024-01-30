@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using SistemaVentasBatia.Models;
-using SistemaVentasBatia.DTOs;
-using SistemaVentasBatia.Enums;
-using SistemaProveedoresBatia.DTOs;
+using SistemaClientesBatia.Models;
+using SistemaClientesBatia.DTOs;
+using SistemaClientesBatia.Enums;
 
-namespace SistemaVentasBatia
+namespace SistemaClientesBatia
 {
     public class AutoMapper : Profile
     {
@@ -20,24 +19,7 @@ namespace SistemaVentasBatia
             CreateMap<Acceso, AccesoDTO>();
             CreateMap<UsuarioDTO, Usuario>();
             CreateMap<Usuario, UsuarioDTO>();
-            CreateMap<Listados, ListadosDTO>();
-            CreateMap<ListadosDTO, Listados>();
-            CreateMap<OrdenCompraDTO, OrdenCompra>();
-            CreateMap<OrdenCompra, OrdenCompraDTO>();
-            CreateMap<DetalleMaterial, DetalleMaterialDTO>();
-            CreateMap<DetalleMaterialDTO, DetalleMaterial>();
-            CreateMap<AcuseEntrega, AcuseEntregaDTO>();
-            CreateMap<AcuseEntregaDTO, AcuseEntrega>();
-            CreateMap<Factura, FacturaDTO>();
-            CreateMap<FacturaDTO, Factura>();
-            CreateMap<EstadoDeCuenta, EstadoDeCuentaDTO>();
-            CreateMap<EstadoDeCuentaDTO, EstadoDeCuenta>();
-            CreateMap<ListaEvaluacionProveedor, ListaEvaluacionProveedorDTO>();
-            CreateMap<ListaEvaluacionProveedorDTO, ListaEvaluacionProveedor>();
-            CreateMap<EvaluacionProveedor, EvaluacionProveedorDTO>();
-            CreateMap<EvaluacionProveedorDTO, EvaluacionProveedor>();
-            CreateMap<DashOrdenMes, DashOrdenMesDTO>();
-            CreateMap<DashOrdenMesDTO, DashOrdenMes>();
+
         }
     }
 }

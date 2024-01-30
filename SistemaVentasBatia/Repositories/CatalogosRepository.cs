@@ -1,14 +1,14 @@
 ﻿using Dapper;
-using SistemaVentasBatia.Context;
-using SistemaVentasBatia.Models;
+using SistemaClientesBatia.Context;
+using SistemaClientesBatia.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SistemaVentasBatia.Enums;
+using SistemaClientesBatia.Enums;
 using Microsoft.AspNetCore.Server.IIS.Core;
 
-namespace SistemaVentasBatia.Repositories
+namespace SistemaClientesBatia.Repositories
 {
     public interface ICatalogosRepository
     {

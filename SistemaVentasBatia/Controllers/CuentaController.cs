@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SistemaVentasBatia.DTOs;
-using SistemaVentasBatia.Models;
-using SistemaVentasBatia.Services;
+using SistemaClientesBatia.DTOs;
+using SistemaClientesBatia.Models;
+using SistemaClientesBatia.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SistemaVentasBatia.Controllers
+namespace SistemaClientesBatia.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,21 +17,6 @@ namespace SistemaVentasBatia.Controllers
         public CuentaController(ICuentaService logic)
         {
             _logic = logic;
-        }
-
-        [HttpGet("[action]/{idProveedor}/{pagina}")]
-        public async Task <ListadoEstadoDeCuentaDTO> GetEstadoDeCuenta(int idProveedor = 0, int pagina = 1)
-        {
-            var estadodecuenta = new ListadoEstadoDeCuentaDTO
-            {
-                Pagina = pagina
-            };
-            return await _logic.GetEstadoDeCuenta(estadodecuenta,idProveedor);
-        }
-        [HttpGet("[action]/{idProveedor}")]
-        public async Task <List<ListaEvaluacionProveedorDTO>> GetListadoEvaluacionProveedor(int idProveedor)
-        {
-            return await _logic.GetListadoEvaluacionProveedor(idProveedor);
         }
     }
 }
