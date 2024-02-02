@@ -34,8 +34,7 @@ per_nombre Nombre,
 idpersonal as IdPersonal,
 per_interno as IdInterno, 
 per_status Estatus, 
-id_empleado as IdEmpleado,
-id_proveedor as IdProveedor
+id_empleado as IdEmpleado
 FROM personal where per_usuario = @Usuario and per_password = @Contrasena
 "; // and per_status=0
 

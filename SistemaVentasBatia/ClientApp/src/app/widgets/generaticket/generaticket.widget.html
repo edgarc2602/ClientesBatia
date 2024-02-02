@@ -1,0 +1,77 @@
+<meta charset="UTF-8">
+<div class="modal fade modal-lg" id="modalGeneraTicket" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <meta charset="UTF-8">
+            <!-- Modal Header -->
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title">Generar ticket</h4>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3 col-4 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" [(ngModel)]="model.nombre" id="Nombre">
+                            <label for="Nombre">Nombres</label>
+                        </div>
+                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-4 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" [(ngModel)]="model.paterno" id="Paterno">
+                            <label for="A.Paterno">A.Paterno</label>
+                        </div>
+                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-4 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" [(ngModel)]="model.materno" id="Materno">
+                            <label for="A.Materno">A.Materno</label>
+                        </div>
+                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
+                    </div>
+                    <div class="col-sm-12 col-md-5 col-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" [(ngModel)]="model.email" id="Email">
+                            <label for="Email">Email</label>
+                        </div>
+                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-12 mb-3">
+                        <div class="form-floating">
+                            <textarea class="form-control custom-textarea" [(ngModel)]="model.descripcion" id="Descripcion" rows="3"></textarea>
+                            <label for="Descripcion">Descripcion</label>
+                        </div>
+                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Descripcion') }}</span>-->
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="form-floating">
+                            <select class="form-select" aria-label="Prioridad" [(ngModel)]="model.idPrioridad">
+                                <option *ngFor="let p of prioridad" [ngValue]="p.id">{{ p.descripcion }}</option>
+                            </select>
+                            <label for="Prioridad">Prioridad</label>
+                        </div>
+                        <!--<span *ngIf="ferr('Prioridad')" class="text-danger">{{ terr('IdTipoInmueble') }}</span>-->
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="form-floating">
+                            <select class="form-select" aria-label="Categoria" [(ngModel)]="model.idCategoria">
+                                <option *ngFor="let c of categoria" [ngValue]="c.id">{{ c.descripcion }}</option>
+                            </select>
+                            <label for="Categoria">Categoria</label>
+                        </div>
+                        <!--<span *ngIf="ferr('Prioridad')" class="text-danger">{{ terr('IdTipoInmueble') }}</span>-->
+                    </div>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="row"></div>
+                <button type="button" (click)="guardarTicket()" class="btn btn-outline-success"><i class="fa-solid fa-save"></i> Generar</button>
+                <button type="button" (click)="close()" class="btn btn-outline-secondary"> Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

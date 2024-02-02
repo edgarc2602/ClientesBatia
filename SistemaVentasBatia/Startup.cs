@@ -64,14 +64,14 @@ namespace SistemaClientesBatia
             services.AddScoped<IUsuarioService, UsuarioService>();
             //services.AddScoped<IEntregaService, EntregaService>();
             //services.AddScoped<IFacturaService, FacturaService>();
-            //services.AddScoped<ICuentaService, CuentaService>();
+            services.AddScoped<ITicketService, TicketService>();
 
             // Repositories
             services.AddScoped<ICatalogosRepository, CatalogosRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             //services.AddScoped<IEntregaRepository, EntregaRepository>();
             //services.AddScoped<IFacturaRepository, FacturaRepository>();
-            //services.AddScoped<ICuentaRepository, CuentaRepository>();
+            services.AddScoped<ITicketRepository, TicketRepository>();
 
 
         }

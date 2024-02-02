@@ -15,6 +15,9 @@ namespace SistemaClientesBatia.Services
     public interface ICatalogosService
     {
         Task<List<CatalogoDTO>> ObtenerMeses();
+        Task<List<CatalogoDTO>> GetPrioridadTK();
+        Task<List<CatalogoDTO>> GetStatusTK();
+        Task<List<CatalogoDTO>> GetCategoriaTK();
     }
 
     public class CatalogosService : ICatalogosService
@@ -32,6 +35,24 @@ namespace SistemaClientesBatia.Services
         {
             var meses = mapper.Map<List<CatalogoDTO>>(await catalogosRepo.ObtenerMeses());
             return meses;
+        }
+
+        public async Task <List<CatalogoDTO>> GetPrioridadTK()
+        {
+            var prioridades = mapper.Map <List<CatalogoDTO>> (await catalogosRepo.GetPrioridadTK());
+            return prioridades;
+        }
+
+        public async Task<List<CatalogoDTO>> GetStatusTK()
+        {
+            var prioridades = mapper.Map<List<CatalogoDTO>>(await catalogosRepo.GetStatusTK());
+            return prioridades;
+        }
+
+        public async Task<List<CatalogoDTO>> GetCategoriaTK()
+        {
+            var prioridades = mapper.Map<List<CatalogoDTO>>(await catalogosRepo.GetCategoriaTK());
+            return prioridades;
         }
     }
 }

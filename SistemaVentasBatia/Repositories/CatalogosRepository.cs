@@ -13,6 +13,9 @@ namespace SistemaClientesBatia.Repositories
     public interface ICatalogosRepository
     {
         Task<List<Catalogo>> ObtenerMeses();
+        Task<List<Catalogo>> GetPrioridadTK();
+        Task<List<Catalogo>> GetStatusTK();
+        Task<List<Catalogo>> GetCategoriaTK();
     }
 
     public class CatalogosRepository : ICatalogosRepository
@@ -43,6 +46,69 @@ From tb_mes
                 throw ex;
             }
             return meses;
+        }
+
+        public async Task<List<Catalogo>> GetPrioridadTK()
+        {
+            string query = @"
+SELECT 
+id_prioridad Id,
+descripcion Descripcion
+From tb_prioridadtk
+";
+            var prioridades = new List<Catalogo>();
+            try
+            {
+                using var connection = ctx.CreateConnection();
+                prioridades = (await connection.QueryAsync<Catalogo>(query)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return prioridades;
+        }
+
+        public async Task<List<Catalogo>> GetStatusTK()
+        {
+            string query = @"
+SELECT 
+id_status Id,
+descripcion Descripcion
+From tb_statustk
+";
+            var status = new List<Catalogo>();
+            try
+            {
+                using var connection = ctx.CreateConnection();
+                status = (await connection.QueryAsync<Catalogo>(query)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return status;
+        }
+
+        public async Task<List<Catalogo>> GetCategoriaTK()
+        {
+            string query = @"
+SELECT 
+id_categoria Id,
+descripcion Descripcion
+From tb_categoriatk
+";
+            var categorias = new List<Catalogo>();
+            try
+            {
+                using var connection = ctx.CreateConnection();
+                categorias = (await connection.QueryAsync<Catalogo>(query)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return categorias;
         }
     }
 }

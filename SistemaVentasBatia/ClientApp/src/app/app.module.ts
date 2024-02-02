@@ -18,8 +18,9 @@ import { CommonModule } from '@angular/common';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './exclusivo/dashboard/dashboard.component';
-import { EntregaComponent } from './exclusivo/entrega/entrega.component';
-import { DetalleMaterialesListadoWidget } from './widgets/detallematerialeslistado/detallematerialeslistado.widget';
+import { TicketComponent } from '../app/exclusivo/ticket/ticket.component';
+
+import { GeneraTicketWidget } from './widgets/generaticket/generaticket.widget';
 import { CargarAcuseEntregaWidget } from './widgets/cargaracuseentrega/cargaracuseentrega.widget';
 import { CargarFacturaWidget } from './widgets/cargarfactura/cargarfactura.widget';
 import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
@@ -38,12 +39,12 @@ import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
         PaginaWidget,
         ToastWidget,
         EliminaWidget,
-        DetalleMaterialesListadoWidget,
+        GeneraTicketWidget,
         CargarAcuseEntregaWidget,
         CargarFacturaWidget,
 
         DashboardComponent,
-        EntregaComponent,
+        TicketComponent,
         ConfirmaWidget,
         
     ],
@@ -64,7 +65,7 @@ import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
                 path: 'exclusivo', component: ExclusivoComponent,
                 children: [
                     { path: '', component: DashboardComponent, pathMatch: 'full' },
-                    { path: 'entrega', component: EntregaComponent },
+                    { path: 'entrega', component: TicketComponent },
                     //{ path: 'prospecto/:id', component: ProsNuevoComponent }, ejemplo ruta a componente con id
                 ]
             }
