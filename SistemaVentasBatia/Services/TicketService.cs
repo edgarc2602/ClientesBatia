@@ -17,6 +17,7 @@ namespace SistemaClientesBatia.Services
         //Task<ListadoEstadoDeCuentaDTO> GetEstadoDeCuenta(ListadoEstadoDeCuentaDTO estadodecuenta, int idProveedor);
         Task<bool> GuardarTicket(TicketDTO ticketM);
         Task ObtenerListaTickets(ListaTicketDTO listaTicket, int idCliente);
+        Task<bool> CerrarTicket(int idClienteTicket, int idCliente);
     }
 
     public class TicketService : ITicketService
@@ -68,6 +69,10 @@ namespace SistemaClientesBatia.Services
             {
                 listaTicket.Tickets = new List<TicketMinDTO>();
             }
+        }
+        public async Task<bool> CerrarTicket(int idClienteTicket, int idCliente)
+        {
+            return await _TicketRepo.CerrarTicket(idClienteTicket, idCliente);
         }
     }
 }

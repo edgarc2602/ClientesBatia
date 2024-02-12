@@ -38,5 +38,11 @@ namespace SistemaClientesBatia.Controllers
             await _logic.ObtenerListaTickets(listaTicket, idCliente);
             return listaTicket;
         }
+
+        [HttpGet("[action]/{idClienteTicket}/{idCliente}")]
+        public async Task<bool> CerrarTicket(int idClienteTicket, int idCliente)
+        {
+            return await _logic.CerrarTicket(idClienteTicket, idCliente);
+        }
     }
 }

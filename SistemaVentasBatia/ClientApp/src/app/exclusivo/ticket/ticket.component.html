@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-2 col-6 mb-3">
             <div class="form-floating">
-                <select class="form-select" aria-label="Prioridad" [(ngModel)]="prioridadsl" (change)="obtenerTickets()">
+                <select class="form-select" aria-label="Prioridad" [(ngModel)]="prioridadsl" (change)="obtenerTickets(1)">
                     <option value="0">Seleccione...</option>
                     <option *ngFor="let p of prioridad" [ngValue]="p.id">{{ p.descripcion }}</option>
                 </select>
@@ -17,7 +17,7 @@
         </div>
         <div class="col-md-3 col-6 mb-3">
             <div class="form-floating">
-                <select class="form-select" aria-label="Categoria" [(ngModel)]="categoriasl" (change)="obtenerTickets()">
+                <select class="form-select" aria-label="Categoria" [(ngModel)]="categoriasl" (change)="obtenerTickets(1)">
                     <option value="0">Seleccione...</option>
                     <option *ngFor="let c of categoria" [ngValue]="c.id">{{ c.descripcion }}</option>
                 </select>
@@ -26,19 +26,16 @@
         </div>
         <div class="col-md-2 col-6 mb-3">
             <div class="form-floating">
-                <select class="form-select" aria-label="Estatus" [(ngModel)]="statussl" (change)="obtenerTickets()">
+                <select class="form-select" aria-label="Estatus" [(ngModel)]="statussl" (change)="obtenerTickets(1)">
                     <option value="0">Seleccione...</option>
                     <option *ngFor="let s of status" [ngValue]="s.id">{{ s.descripcion }}</option>
                 </select>
                 <label for="Estatus">Estatus</label>
             </div>
         </div>
-        <div class="col-md-2 col-6 mb-3 d-none d-sm-block">
-            <!-- Contenido del div -->
-        </div>
 
-        <div class="col-md-3 mb-3 text-end">
-            <a class="btn btn-outline-success" (click)="generaTicketWidget()"><i class="fa-solid fa-plus"></i>  Nuevo ticket</a>
+        <div class="col-md-5 mb-3 col-6 text-end">
+            <a class="btn btn-outline-primary" (click)="generaTicketWidget()"><i class="fa-solid fa-plus"></i>  Nuevo ticket</a>
         </div>
     </div>
     <div class="row box-shadow d-md-none" style="border-radius: 10px; overflow-x: hidden;">
@@ -59,7 +56,7 @@
                                         <span class="badge ">Id:</span>
                                         <div class=" ms-2">{{ t.idClienteTicket }}</div>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-2">
+                                    <div class="col-md-2 col-sm-6 col-4">
                                         <span class="badge">Categoria:</span>
                                         <div class="ms-2">{{ t.categoria }}</div>
                                     </div>
@@ -71,22 +68,29 @@
                                         <span class="badge">Estatus:</span>
                                         <div class="ms-2">{{ t.status }}</div>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-3">
+                                    <div class="col-md-2 col-sm-6 col-4">
                                         <span class="badge">F.Alta:</span>
                                         <div class="ms-2">{{ t.fechaAlta | date: 'dd-MM-yyyy' }}</div>
                                     </div>
                                     <div class="col-md-5 col-sm-6 col-8">
                                         <span class="badge">Descripción:</span>
-                                        <div class="ms-2">{{ t.descripcion }}</div>
+                                        <div class="ms-2" style="font-size: smaller;">{{ t.descripcion }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="text-center">
                                 <div>
-
                                     <div class="col-12 col-md-12 col-sm-12">
-                                        <button type="button" class="btn btn-lg text-primary" (click)="cerrarTicket(t.idClienteTicket)" data-bs-toggle="tooltip" title="Cerrar ticket">
-                                            <i class="fa-solid fa-clipboard-check" style="color: #0d6efd;"></i>
+                                        <button type="button" class="btn btn-lg text-primary position-relative"
+                                                (click)="valida(t.idClienteTicket)"
+                                                data-bs-toggle="tooltip" title="Cerrar ticket"
+                                                [disabled]="t.status === 'Cerrado'">
+                                            <ng-container *ngIf="t.status === 'Cerrado'; else openTicketIcon">
+                                                <i class="fa-solid fa-check" style="color: seagreen" [ngClass]="{'text-muted': t.status === 'Cerrado'}"></i>
+                                            </ng-container>
+                                            <ng-template #openTicketIcon>
+                                                <i class="fa-solid fa-clipboard-check" [ngClass]="{'text-muted': t.status === 'Cerrado'}"></i>
+                                            </ng-template>
                                         </button>
                                     </div>
                                 </div>
@@ -106,30 +110,29 @@
                         <tr>
                             <td>
                                 <div class="row" style="font-weight: bold;">
-                                    <div class="col-md-1 col-sm-6 col-2">
+                                    <div class="col-md-1 col-sm-6 col-2 text-center">
                                         <span class="text-white d-none d-md-block">Id</span>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-8">
+                                    <div class="col-md-2 col-sm-6 col-8 text-center">
                                         <span class="text-white d-none d-md-block">Categoria</span>
                                     </div>
-                                    <div class="col-md-1 col-sm-6 col-8">
+                                    <div class="col-md-1 col-sm-6 col-8 text-center">
                                         <span class="text-white">Prioridad</span>
                                     </div>
-                                    <div class="col-md-1 col-sm-6 col-2">
+                                    <div class="col-md-1 col-sm-6 col-2 text-center">
                                         <span class="text-white">Estatus</span>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-3">
+                                    <div class="col-md-2 col-sm-6 col-3 text-center">
                                         <span class="text-white">F.Alta</span>
                                     </div>
-
                                     <div class="col-md-5 col-sm-6 col-3">
-                                        <span class="text-white">Descripcion</span>
+                                        <span class="text-white" >Descripcion</span>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div>
-                                    <div class="col-md-12 col-sm-12 col-12">
+                                    <div class="col-md-12 col-sm-12 col-12 text-center">
                                         <span class="text-white">Cerrar</span>
                                     </div>
                                 </div>
@@ -140,32 +143,39 @@
                         <tr *ngFor="let t of model.tickets">
                             <td>
                                 <div class="row text-start">
-                                    <div class="col-md-1 col-sm-6 col-2">
+                                    <div class="col-md-1 col-sm-6 col-2 text-center">
                                         <div class=" ms-2">{{ t.idClienteTicket }}</div>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-2">
+                                    <div class="col-md-2 col-sm-6 col-2 text-center">
                                         <div class="ms-2">{{ t.categoria }}</div>
                                     </div>
-                                    <div class="col-md-1 col-sm-6 col-3">
+                                    <div class="col-md-1 col-sm-6 col-3 text-center">
                                         <div class="ms-2">{{ t.prioridad }}</div>
                                     </div>
-                                    <div class="col-md-1 col-sm-6 col-3">
+                                    <div class="col-md-1 col-sm-6 col-3 text-center">
                                         <div class="ms-2">{{ t.status }}</div>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-3">
+                                    <div class="col-md-2 col-sm-6 col-3 text-center">
                                         <div class="ms-2">{{ t.fechaAlta | date: 'dd-MM-yyyy' }}</div>
                                     </div>
                                     <div class="col-md-5 col-sm-6 col-8">
-                                        <div class="ms-2">{{ t.descripcion }}</div>
+                                        <div class="ms-2" style="font-size: smaller;">{{ t.descripcion }}</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="text-center">
                                 <div>
-
                                     <div class="col-12 col-md-12 col-sm-12">
-                                        <button type="button" class="btn btn-lg text-primary" (click)="cerrarTicket(t.idClienteTicket)" data-bs-toggle="tooltip" title="Cerrar ticket">
-                                            <i class="fa-solid fa-clipboard-check" style="color: #0d6efd;"></i>
+                                        <button type="button" class="btn btn-lg text-primary position-relative"
+                                                (click)="valida(t.idClienteTicket)"
+                                                data-bs-toggle="tooltip" title="Cerrar ticket"
+                                                [disabled]="t.status === 'Cerrado'">
+                                            <ng-container *ngIf="t.status === 'Cerrado'; else openTicketIcon">
+                                                <i class="fa-solid fa-check" style="color: forestgreen"  [ngClass]="{'text-muted': t.status === 'Cerrado'}"></i>
+                                            </ng-container>
+                                            <ng-template #openTicketIcon>
+                                                <i class="fa-solid fa-clipboard-check" [ngClass]="{'text-muted': t.status === 'Cerrado'}"></i>
+                                            </ng-template>
                                         </button>
                                     </div>
                                 </div>
@@ -182,3 +192,4 @@
     <pagina-widget [pagina]="model.pagina" [numPaginas]="model.numPaginas" [rows]="model.rows" (chgEvent)="muevePagina($event)"></pagina-widget>
 </div>
 <generaticket-widget (ansEvent)="obtenerTickets($event)"></generaticket-widget>
+<confirma-widget (confirmaEvent) ="cerrarTicket($event)"></confirma-widget>

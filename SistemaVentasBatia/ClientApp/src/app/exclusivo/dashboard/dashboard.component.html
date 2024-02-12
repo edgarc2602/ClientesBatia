@@ -6,5 +6,159 @@
     <div class="col-12 mt-1 " style="position: relative;">
         <h1 class="h2" style="position: absolute; top: 0; left: 0; z-index: 1;">Dashboard</h1>
     </div>
-    
+    <div class="sticky-container align-content-center align-middle">
+        <div class="d-block d-md-none row pb-5">
+            <div class="col-12">
+            </div>
+        </div>
+        <div class="d-none d-lg-block row pb-2">
+            <div class="col-12">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-10">
+                <div *ngIf="isLoading" class="text-end">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 sticky-top">
+                <div class="form-floating shadow-sm">
+                    <input type="number" class="form-control" [(ngModel)]="param.anio" id="anio" (change)="getDashboard('')" [disabled]="isLoading">
+                    <label asp-for="fechaInicio">Año</label>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 sticky-top">
+                <div class="form-floating shadow-sm">
+                    <select id="ddlmes" class="form-select" [(ngModel)]="param.mes" (change)="getDashboard('')" [disabled]="isLoading">
+                        <option *ngFor="let m of mesesc" [ngValue]="m.id">{{ m.descripcion }}</option>
+                    </select>
+                    <label asp-for="ddlmes">Mes</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row mb-3">
+        <div class="col-6 col-md-3">
+            <div class="card box-shadow mb-3">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Asistencia</h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <i class="fa fa-calendar fa-2x" style="color: orangered;"></i>
+
+                        </div>
+                        <div class="display-6">
+                            %{{ dashboard.asistencia }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card box-shadow mb-3">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Entregas</h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <i class="fa fa-taxi fa-2x" style="color: aqua;"></i>
+                        </div>
+                        <div class="display-6">
+                            {{ dashboard.entregas }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card box-shadow mb-3">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Supervisión</h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <i class="fa fa-users fa-2x" style="color: purple;"></i>
+                        </div>
+                        <div class="display-6">
+                            {{ dashboard.supervision }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <!--<div class="col-6 col-md-3" data-toggle="tooltip" data-placement="top" title="Calcula si los acuses se cargan el mismo dia en que se realiza la entrega">-->
+            <div class="card box-shadow mb-3">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Evaluaciones</h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <i class="fa fa-thumbs-up fa-2x" style="color: green;"></i>
+                        </div>
+                        <div class="display-6">
+                            {{ dashboard.evaluaciones }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row my-2">
+            <div class="col-md-4  mb-3">
+                <div class="card text-center shadow-sm" style="border-radius: 10px; overflow-x: hidden;">
+                    <div style="height: 300px; overflow-y: auto; overflow-x: hidden; ">
+                        <table class="table table-striped">
+                            <thead class="sticky-top">
+                                <tr>
+                                    <th class="bg-light-blue-gradient">Id</th>
+                                    <th class="bg-light-blue-gradient">Sucursal</th>
+                                    <th class="bg-light-blue-gradient">Plantilla</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let s of sucursales"
+                                    (click)="selectSucursal(s)"
+                                    [ngClass]="{'selected': s === selectedRow}">
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-3 col-md-12">
+                                                <div class="ms-1">{{ s.idSucursal }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-2 col-md-12">
+                                                <div class="ms-4">{{ s.sucursal }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-7 col-md-12">
+                                                <div class="ms-1">{{ s.cantidad }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 shadow-sm mb-3">
+                <div class="card text-center">
+                    <div id="GAM" style="height:300px;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 shadow-sm mb-3">
+                <div class="card text-center">
+                    <div id="GIM" style="height:300px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
 </div>

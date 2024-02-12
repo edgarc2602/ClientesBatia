@@ -17,6 +17,12 @@ namespace SistemaClientesBatia
             CreateMap<Usuario, UsuarioDTO>();
             CreateMap<TicketDTO, Ticket>();
             CreateMap<Ticket, TicketDTO>();
+            CreateMap<Sucursales,SucursalesDTO>();
+            CreateMap<SucursalesDTO,Sucursales>();
+            CreateMap<AsistenciaMes,AsistenciaMesDTO>();
+            CreateMap<AsistenciaMesDTO,AsistenciaMes>();
+            CreateMap<Incidencia,IncidenciaDTO>();
+            CreateMap<IncidenciaDTO,Incidencia>();
         }
     }
 }

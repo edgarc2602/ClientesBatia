@@ -176,7 +176,7 @@ html {
 }
 
 thead.sticky-top {
-    z-index: 100;
+    z-index: 99;
 }
 
 align-middle {
@@ -322,7 +322,7 @@ table thead {
     color: #fff;
 }
 
-.card {
+/*.card {
     transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
     color: black;
 }
@@ -335,7 +335,7 @@ table thead {
 .card-title {
     transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
     color: black;
-}
+}*/
 
 body {
     margin-bottom: 60px;
@@ -416,6 +416,12 @@ input[type="date"] {
     transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease, fill 0.3s ease;
 }
 
+.highcharts-data-labels text {
+    fill: black; /* Cambia el color del texto aquí */
+    color: black;
+}
+
+
 .custom-textarea {
     background-color: #FFFF;
     color: black;
@@ -444,7 +450,7 @@ input[type="date"] {
     padding: 0;
     margin-bottom: 0px;
     border-bottom: 0px;
-    /*background-image: url('../src/login_fondo.png');*/
+    background-image: url('../src/login_fondo.jpeg');
     background-size: contain;
     background-position: center center;
     background-repeat: no-repeat;
@@ -477,6 +483,11 @@ input:focus::-webkit-input-placeholder {
     color: rgba(0, 0, 0, 0.2);
 }
 
+.selected {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease;
+    background-color: #E2FFFE;
+}
 /* Tema obscuro
 -------------------------------------------------- */
 .dark-theme {
@@ -548,6 +559,7 @@ input:focus::-webkit-input-placeholder {
         transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
 
+
     .dark-theme #sidebarMenu {
         background-color: rgba(21, 21, 21, 0.8);
         color: #fff;
@@ -615,6 +627,12 @@ input:focus::-webkit-input-placeholder {
         color: #fff;
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease, fill 0.3s ease;
     }
+
+    .dark-theme .highcharts-data-labels text {
+        fill: white; /* Cambia el color del texto aquí */
+        color: white
+    }
+
 
     .dark-theme #accordion {
         background-color: #383434;

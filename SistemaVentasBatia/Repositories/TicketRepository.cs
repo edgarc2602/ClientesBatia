@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using SistemaClientesBatia.Context;
 using SistemaClientesBatia.Enums;
 using SistemaClientesBatia.Models;
@@ -15,10 +17,10 @@ namespace SistemaClientesBatia.Repositories
 {
     public interface ITicketRepository
     {
-        //Task<int> ContarEstadoDeCuenta(int idProveedor);
         Task<bool> GuardarTicket(Ticket ticket);
         Task<int> ContarTickets(int idPrioridad, int idCategoria, int idStatus, int idCliente);
         Task<List<Ticket>> ObtenerTickets(int pagina, int idPrioridad, int idCategoria, int idStatus, int idCliente);
+        Task<bool> CerrarTicket(int idClienteTicket, int idCliente);
     }
 
     public class TicketRepository : ITicketRepository
@@ -35,8 +37,8 @@ namespace SistemaClientesBatia.Repositories
             var query = @"
 INSERT INTO tb_clienteticket (
 nombre,
-paterno,
-materno,
+--paterno,
+--materno,
 email,
 descripcion,
 id_categoria,
@@ -46,8 +48,8 @@ fecha_alta,
 id_cliente
 )VALUES(
 @Nombre,
-@Paterno,
-@Materno,
+--@Paterno,
+--@Materno,
 @Email,
 @Descripcion,
 @IdCategoria,
@@ -72,7 +74,6 @@ GETDATE(),
             }
             return result;
         }
-
         public async Task<int> ContarTickets(int idPrioridad, int idCategoria, int idStatus, int idCliente)
         {
             string query = @"
@@ -104,8 +105,8 @@ FROM (
 SELECT ROW_NUMBER() OVER ( ORDER BY a.id_clienteticket desc ) AS RowNum, 
 a.id_clienteticket IdClienteTicket,
 a.nombre Nombre,
-a.paterno Paterno,
-a.materno Materno,
+--a.paterno Paterno,
+--a.materno Materno,
 a.email Email,
 a.descripcion Descripcion,
 a.id_categoria IdCategoria,
@@ -136,6 +137,28 @@ ORDER BY RowNum
                 throw ex;
             }
             return tickets;
+        }
+        public async Task<bool> CerrarTicket(int idClienteTicket, int idCliente)
+        {
+            string query = @"
+UPDATE tb_clienteticket
+SET id_status = 4, fecha_cierre = GETDATE()
+WHERE id_clienteticket = @idClienteTicket AND 
+id_cliente = @idCliente
+";
+            bool result;
+            try
+            {
+                using var connection = _ctx.CreateConnection();
+                await connection.ExecuteAsync(query, new { idClienteTicket, idCliente});
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                throw ex;
+            }
+            return result;
         }
     }
 }

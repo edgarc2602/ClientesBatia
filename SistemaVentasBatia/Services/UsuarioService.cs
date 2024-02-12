@@ -17,6 +17,9 @@ namespace SistemaClientesBatia.Services
     {
         Task<UsuarioDTO> Login(AccesoDTO dto);
         Task<bool> Existe(AccesoDTO dto);
+        Task<ActionResult<DashboardDTO>> GetDashboard(ParamDashboardDTO param);
+        DashboardDTO GetDashboardData(ParamDashboardDTO param);
+        Task<List<SucursalesDTO>> GetSucursales(int idCliente);
     }
     public class UsuarioService : IUsuarioService
     {
@@ -71,6 +74,32 @@ namespace SistemaClientesBatia.Services
             }
 
             return usu;
+        }
+
+        public async Task<ActionResult<DashboardDTO>> GetDashboard(ParamDashboardDTO param)
+        {
+            var dashboard = new DashboardDTO();
+            dashboard.Asistencia = await _repo.GetAsistenciaInd(param);
+            dashboard.Entregas = await _repo.GetEntregasInd(param);
+            dashboard.Supervision = await _repo.GetSupervisionInd(param);
+            dashboard.Evaluaciones = await _repo.GetEvaluacionesInd(param);
+            var sucursales = _mapper.Map<List<SucursalesDTO>>(await _repo.GetSucursales(param));
+            dashboard.Sucursales = sucursales;
+            var asistenciaMes = _mapper.Map <List<AsistenciaMesDTO>>(await _repo.GetAsistenciaMes(param));
+            dashboard.AsistenciaMes = asistenciaMes;
+            var incidencia = _mapper.Map <List<IncidenciaDTO>>(await _repo.GetIncidencia(param));
+            dashboard.Incidencia = incidencia;
+            return dashboard;
+        }
+        public DashboardDTO GetDashboardData(ParamDashboardDTO param)
+        {
+            return _repo.GetDashboardData(param);
+        }
+
+        public async Task<List<SucursalesDTO>> GetSucursales(int idCliente)
+        {
+            var sucursales = _mapper.Map<List<SucursalesDTO>>(await _repo.GetSucursalesidCliente(idCliente));
+            return sucursales;
         }
     }
 }

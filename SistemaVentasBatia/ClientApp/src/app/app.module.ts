@@ -24,6 +24,8 @@ import { GeneraTicketWidget } from './widgets/generaticket/generaticket.widget';
 import { CargarAcuseEntregaWidget } from './widgets/cargaracuseentrega/cargaracuseentrega.widget';
 import { CargarFacturaWidget } from './widgets/cargarfactura/cargarfactura.widget';
 import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
+import { ReactiveFormsModule } from '@angular/forms';
+
  
 
 @NgModule({
@@ -53,6 +55,7 @@ import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
         HttpClientModule,
         BrowserAnimationsModule,
         FormsModule,
+        ReactiveFormsModule,
         CommonModule,
         RouterModule.forRoot([
             {
@@ -65,7 +68,7 @@ import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
                 path: 'exclusivo', component: ExclusivoComponent,
                 children: [
                     { path: '', component: DashboardComponent, pathMatch: 'full' },
-                    { path: 'entrega', component: TicketComponent },
+                    { path: 'ticket', component: TicketComponent },
                     //{ path: 'prospecto/:id', component: ProsNuevoComponent }, ejemplo ruta a componente con id
                 ]
             }

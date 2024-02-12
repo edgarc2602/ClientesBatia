@@ -10,7 +10,7 @@
             </a>
         </li>
         <li class="nav-item mb-3 text-sm-start text-md-center">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" [routerLink]="['/exclusivo/entrega']" [routerLinkActive]='["active"]' aria-current="page">
+            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" [routerLink]="['/exclusivo/ticket']" [routerLinkActive]='["active"]' aria-current="page">
                 <div data-bs-toggle="tooltip" data-bs-placement="right">
                     <span><i class="fa-solid fa-file-invoice fa-2x"></i></span>
                     <div class=" d-block d-md-none"><h6>TICKETS</h6></div>
@@ -48,7 +48,7 @@
         <li class="nav-item mb-3 text-sm-start text-md-center">
             <a *ngIf="!isDarkTheme" class="nav-link"  data-bs-toggle="collapse"  data-bs-target="#sidebarMenu" (click)="toggleTheme()">
                 <div data-bs-toggle="tooltip" data-bs-placement="right">
-                    <span> <i class="fa-solid fa-moon fa-2x" style="color: #fff;"></i></span>
+                    <span> <i class="fa-solid fa-moon fa-2x" style="color: #333333;"></i></span>
                     <div class=" d-block d-md-none"><h6>TEMA</h6></div>
                     <hr class="d-block d-md-none" />
                 </div>
@@ -79,7 +79,7 @@
             </a>
         </li>
         <li class="nav-item mb-3 text-sm-start text-md-center">
-            <a class="nav-link" [routerLink]="['/exclusivo/entrega']" [routerLinkActive]='["active"]' aria-current="page">
+            <a class="nav-link" [routerLink]="['/exclusivo/ticket']" [routerLinkActive]='["active"]' aria-current="page">
                 <div data-bs-toggle="tooltip" data-bs-placement="right" title="Tickets">
                     <span><i class="fa-solid fa-file-invoice fa-2x"></i></span>
                     <div class="float-end d-block d-sm-none"><h6>TICKETS</h6></div>

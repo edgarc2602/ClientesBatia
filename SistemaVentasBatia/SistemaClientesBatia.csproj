@@ -35,7 +35,6 @@
 	  <None Remove="ClientApp\src\app\models\usuario.ts" />
 	  <None Remove="ClientApp\src\app\models\usuarioregistro.ts" />
 	  <None Remove="ClientApp\src\app\stores\StoreUser.ts" />
-	  <None Remove="ClientApp\src\login_fondo.png" />
 	  <None Remove="ClientApp\src\logo_fondo.png" />
 	</ItemGroup>
 
@@ -46,7 +45,6 @@
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
 	  <Content Include="ClientApp\src\app\colectivo\login\login_fondo.png" />
-	  <Content Include="ClientApp\src\login_fondo.png" />
 	  <Content Include="ClientApp\src\logo_fondo.png">
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

@@ -8,7 +8,7 @@ declare var bootstrap: any;
 export class ConfirmaWidget implements OnChanges {
     @Input() mensaje: string = '';
     @Input() titulo: string = '';
-    @Output('ansEvent') sendEvent = new EventEmitter<boolean>();
+    @Output('confirmaEvent') confirmaEvent = new EventEmitter<boolean>();
 
     constructor() {}
 
@@ -19,12 +19,12 @@ export class ConfirmaWidget implements OnChanges {
     }
 
     acepta() {
-        this.sendEvent.emit(true);
+        this.confirmaEvent.emit(true);
         this.close();
     }
 
     cancela() {
-        this.sendEvent.emit(false);
+        //this.confirmaEvent.emit(false);
         this.close();
     }
 

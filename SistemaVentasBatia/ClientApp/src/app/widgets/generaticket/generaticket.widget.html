@@ -9,62 +9,62 @@
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12 col-md-3 col-4 mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" [(ngModel)]="model.nombre" id="Nombre">
-                            <label for="Nombre">Nombres</label>
+                <form  [formGroup]="miFormulario">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-12 mb-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Nombre" formControlName="nombref">
+                                <label for="Nombre">Nombre</label>
+                            </div>
+                            <!-- Muestra mensaje de error si el campo Nombre es requerido y no tiene información -->
+                            <div *ngIf="miFormulario.get('nombref').invalid && miFormulario.get('nombref').touched" class="text-danger">
+                                <div *ngIf="miFormulario.get('nombref').errors.required">El nombre es requerido.</div>
+                            </div>
                         </div>
-                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
-                    </div>
-                    <div class="col-sm-12 col-md-2 col-4 mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" [(ngModel)]="model.paterno" id="Paterno">
-                            <label for="A.Paterno">A.Paterno</label>
+                        <div class="col-sm-12 col-md-6 col-12 mb-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Email" formControlName="emailf">
+                                <label for="Email">Email</label>
+                            </div>
+                            <div *ngIf="miFormulario.get('emailf').invalid && miFormulario.get('emailf').touched" class="text-danger">
+                                <div *ngIf="miFormulario.get('emailf').errors.required">El correo electrónico es requerido.</div>
+                                <div *ngIf="miFormulario.get('emailf').errors.email">El correo electrónico no es válido.</div>
+                            </div>
                         </div>
-                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
-                    </div>
-                    <div class="col-sm-12 col-md-2 col-4 mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" [(ngModel)]="model.materno" id="Materno">
-                            <label for="A.Materno">A.Materno</label>
-                        </div>
-                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
-                    </div>
-                    <div class="col-sm-12 col-md-5 col-12 mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" [(ngModel)]="model.email" id="Email">
-                            <label for="Email">Email</label>
-                        </div>
-                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Nombre') }}</span>-->
-                    </div>
 
-                    <div class="col-sm-12 col-md-6 col-12 mb-3">
-                        <div class="form-floating">
-                            <textarea class="form-control custom-textarea" [(ngModel)]="model.descripcion" id="Descripcion" rows="3"></textarea>
-                            <label for="Descripcion">Descripcion</label>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="form-floating">
+                                <select class="form-select" aria-label="Prioridad" formControlName="prioridadf">
+                                    <option *ngFor="let p of prioridad" [ngValue]="p.id">{{ p.descripcion }}</option>
+                                </select>
+                                <label for="Prioridad">Prioridad</label>
+                            </div>
+                            <div *ngIf="miFormulario.get('prioridadf').invalid && miFormulario.get('prioridadf').touched" class="text-danger">
+                                <div *ngIf="miFormulario.get('prioridadf').errors.required">La prioridad es requerida.</div>
+                            </div>
                         </div>
-                        <!--<span *ngIf="ferr('Nombre')" class="text-danger">{{ terr('Descripcion') }}</span>-->
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="form-floating">
-                            <select class="form-select" aria-label="Prioridad" [(ngModel)]="model.idPrioridad">
-                                <option *ngFor="let p of prioridad" [ngValue]="p.id">{{ p.descripcion }}</option>
-                            </select>
-                            <label for="Prioridad">Prioridad</label>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="form-floating">
+                                <select class="form-select" aria-label="Categoria" formControlName="categoriaf">
+                                    <option *ngFor="let c of categoria" [ngValue]="c.id">{{ c.descripcion }}</option>
+                                </select>
+                                <label for="Categoria">Categoria</label>
+                            </div>
+                            <div *ngIf="miFormulario.get('categoriaf').invalid && miFormulario.get('categoriaf').touched" class="text-danger">
+                                <div *ngIf="miFormulario.get('categoriaf').errors.required">La categoria es requerida.</div>
+                            </div>
                         </div>
-                        <!--<span *ngIf="ferr('Prioridad')" class="text-danger">{{ terr('IdTipoInmueble') }}</span>-->
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="form-floating">
-                            <select class="form-select" aria-label="Categoria" [(ngModel)]="model.idCategoria">
-                                <option *ngFor="let c of categoria" [ngValue]="c.id">{{ c.descripcion }}</option>
-                            </select>
-                            <label for="Categoria">Categoria</label>
+                        <div class="col-sm-12 col-md-6 col-12 mb-3">
+                            <div class="form-floating">
+                                <textarea class="form-control custom-textarea" id="Descripcion" rows="3" formControlName="descripcionf"></textarea>
+                                <label for="Descripcion">Descripcion</label>
+                            </div>
+                            <div *ngIf="miFormulario.get('descripcionf').invalid && miFormulario.get('descripcionf').touched" class="text-danger">
+                                <div *ngIf="miFormulario.get('descripcionf').errors.required">La descripción es requerida.</div>
+                            </div>
                         </div>
-                        <!--<span *ngIf="ferr('Prioridad')" class="text-danger">{{ terr('IdTipoInmueble') }}</span>-->
                     </div>
-                </div>
+                </form>
             </div>
             <!-- Modal footer -->
             <div class="modal-footer">
