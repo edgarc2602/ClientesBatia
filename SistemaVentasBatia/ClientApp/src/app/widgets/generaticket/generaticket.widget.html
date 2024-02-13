@@ -13,18 +13,17 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-6 col-12 mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="Nombre" formControlName="nombref">
-                                <label for="Nombre">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" formControlName="nombref" autocomplete="on">
+                                <label for="nombre">nombre</label>
                             </div>
-                            <!-- Muestra mensaje de error si el campo Nombre es requerido y no tiene información -->
                             <div *ngIf="miFormulario.get('nombref').invalid && miFormulario.get('nombref').touched" class="text-danger">
                                 <div *ngIf="miFormulario.get('nombref').errors.required">El nombre es requerido.</div>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6 col-12 mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="Email" formControlName="emailf">
-                                <label for="Email">Email</label>
+                                <input type="text" class="form-control" id="email" formControlName="emailf" autocomplete="on">
+                                <label for="email">email</label>
                             </div>
                             <div *ngIf="miFormulario.get('emailf').invalid && miFormulario.get('emailf').touched" class="text-danger">
                                 <div *ngIf="miFormulario.get('emailf').errors.required">El correo electrónico es requerido.</div>
@@ -34,10 +33,10 @@
 
                         <div class="col-md-3 col-6 mb-3">
                             <div class="form-floating">
-                                <select class="form-select" aria-label="Prioridad" formControlName="prioridadf">
+                                <select class="form-select" aria-label="Prioridad" formControlName="prioridadf" id="idPrioridad">
                                     <option *ngFor="let p of prioridad" [ngValue]="p.id">{{ p.descripcion }}</option>
                                 </select>
-                                <label for="Prioridad">Prioridad</label>
+                                <label for="idPrioridad">Prioridad</label>
                             </div>
                             <div *ngIf="miFormulario.get('prioridadf').invalid && miFormulario.get('prioridadf').touched" class="text-danger">
                                 <div *ngIf="miFormulario.get('prioridadf').errors.required">La prioridad es requerida.</div>
@@ -45,10 +44,10 @@
                         </div>
                         <div class="col-md-3 col-6 mb-3">
                             <div class="form-floating">
-                                <select class="form-select" aria-label="Categoria" formControlName="categoriaf">
+                                <select class="form-select" aria-label="Categoria" formControlName="categoriaf" id="idCategoria">
                                     <option *ngFor="let c of categoria" [ngValue]="c.id">{{ c.descripcion }}</option>
                                 </select>
-                                <label for="Categoria">Categoria</label>
+                                <label for="idCategoria">Categoria</label>
                             </div>
                             <div *ngIf="miFormulario.get('categoriaf').invalid && miFormulario.get('categoriaf').touched" class="text-danger">
                                 <div *ngIf="miFormulario.get('categoriaf').errors.required">La categoria es requerida.</div>
@@ -56,8 +55,8 @@
                         </div>
                         <div class="col-sm-12 col-md-6 col-12 mb-3">
                             <div class="form-floating">
-                                <textarea class="form-control custom-textarea" id="Descripcion" rows="3" formControlName="descripcionf"></textarea>
-                                <label for="Descripcion">Descripcion</label>
+                                <textarea class="form-control custom-textarea" id="idDescripcion" rows="3" formControlName="descripcionf" autocomplete="on"></textarea>
+                                <label for="idDescripcion">Descripcion</label>
                             </div>
                             <div *ngIf="miFormulario.get('descripcionf').invalid && miFormulario.get('descripcionf').touched" class="text-danger">
                                 <div *ngIf="miFormulario.get('descripcionf').errors.required">La descripción es requerida.</div>

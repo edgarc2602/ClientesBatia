@@ -20,10 +20,8 @@ namespace SistemaClientesBatia.Repositories
         Task<int> GetEntregasInd(ParamDashboardDTO param);
         Task<int> GetSupervisionInd(ParamDashboardDTO param);
         Task<int> GetEvaluacionesInd(ParamDashboardDTO param);
-        Task<List<Sucursales>> GetSucursales(ParamDashboardDTO param);
         Task<List<AsistenciaMes>> GetAsistenciaMes(ParamDashboardDTO param);
         Task<List<Incidencia>> GetIncidencia(ParamDashboardDTO param);
-        DashboardDTO GetDashboardData(ParamDashboardDTO param);
         Task<List<Sucursales>> GetSucursalesidCliente(int idCliente);
     }
 
@@ -279,44 +277,6 @@ month(fecha) = @Mes
             return evaluaciones;
         }
 
-        public async Task<List<Sucursales>> GetSucursales(ParamDashboardDTO param)
-        {
-            var sucursales = new List<Sucursales>();
-            string query;
-            query = @"
-SELECT IdSucursal, Sucursal, Cantidad
-FROM (
-    SELECT 0 as IdSucursal, 'Total' as Sucursal, ISNULL(SUM(b.cantidad), 0) as Cantidad
-    FROM tb_cliente_inmueble a
-    LEFT OUTER JOIN tb_cliente_plantilla b ON a.id_inmueble = b.id_inmueble
-    WHERE id_cliente = @IdCliente AND a.id_status = 1 AND b.id_status = 1
-    GROUP BY a.id_cliente
-    UNION ALL
-    SELECT a.id_inmueble, RTRIM(nombre) as nombre, ISNULL(SUM(b.cantidad), 0) as Cantidad
-    FROM tb_cliente_inmueble a
-    LEFT OUTER JOIN tb_cliente_plantilla b ON a.id_inmueble = b.id_inmueble
-    WHERE 
-	id_cliente = @IdCliente 
-	AND a.id_status = 1 
-	AND b.id_status = 1
-    GROUP BY a.id_inmueble, nombre
-) AS tabla
-";
-            try
-            {
-                using (var connection = _ctx.CreateConnection())
-                {
-                    sucursales = (await connection.QueryAsync<Sucursales>(query, param)).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString() + "GetSucursales");
-                throw ex;
-            }
-            return sucursales;
-        }
-
         public async Task<List<AsistenciaMes>> GetAsistenciaMes(ParamDashboardDTO param)
         {
             var asistenciaMes = new List<AsistenciaMes>();
@@ -399,146 +359,6 @@ group by movimiento
                 throw ex;
             }
             return incidencias;
-        }
-
-        //public async Task<decimal> GetAsistenciaInd(ParamDashboardDTO param)
-        //{
-        //    decimal asistencia = 0;
-        //    string storedProcedure = "sp_asistenciacliente";
-        //    DynamicParameters parameters = new DynamicParameters();
-        //    parameters.Add("@mes", param.Mes);
-        //    parameters.Add("@anio", param.Anio);
-        //    parameters.Add("@cliente", param.IdCliente);
-        //    parameters.Add("@cumplimiento", dbType: DbType.Decimal, direction: ParameterDirection.Output);
-
-        //    try
-        //    {
-        //        using (var connection = _ctx.CreateConnection())
-        //        {
-        //            await connection.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
-        //            asistencia = parameters.Get<decimal>("@cumplimiento");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.ToString());
-        //        throw;
-        //    }
-
-        //    return asistencia;
-        //}
-
-        public DashboardDTO GetDashboardData(ParamDashboardDTO param)
-        {
-            int idCliente = param.IdCliente;
-            int mes = param.Mes;
-            int anio = param.Anio;
-            using (var connection = _ctx.CreateConnection())
-            {
-                var dashboardData = new DashboardDTO();
-
-                // ASISTENCIA TOTAL OPT
-                var asistenciaTotal = connection.QueryFirstOrDefault<int>(
-                    @";WITH TotalCantidad AS (
-    SELECT SUM(cantidad) AS total 
-    FROM tb_cliente_plantilla a 
-    INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble 
-    WHERE b.id_cliente = @IdCliente
-)
-SELECT 
-    CAST(ISNULL(AVG(calif), 0) AS INT) AS AsistenciaTotal  
-FROM (
-    SELECT 
-        CAST((CAST(COUNT(id_empleado) AS float) / (SELECT total FROM TotalCantidad)) * 100 AS numeric(8, 2)) AS calif
-    FROM 
-        tb_empleado_asistencia a 
-        INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble 
-    WHERE 
-        b.id_cliente = @IdCliente
-        AND movimiento = 'A' 
-        AND MONTH(fecha) = @Mes 
-        AND YEAR(fecha) = @Anio 
-    GROUP BY 
-        fecha
-) AS tabla1",
-                    new { IdCliente = idCliente, Mes = mes, Anio = anio }
-                );
-                dashboardData.Asistencia = asistenciaTotal;
-
-                // ENTREGAS Total
-                var entregasTotal = connection.QueryFirstOrDefault<int>(
-                    @"SELECT COUNT(id_listado) as EntregasTotal from tb_listadomaterial where id_cliente = @IdCliente and mes = @Mes and anio = @Anio and id_status != 5;
-",
-                    new { IdCliente = idCliente, Mes = mes, Anio = anio }
-                );
-                dashboardData.Entregas = entregasTotal;
-
-                // SUPERVISION Total
-                var supervisionTotal = connection.QueryFirstOrDefault<int>(
-                    @"select count(id_supervision) as SupervisionTotal from tb_supervision where id_cliente = @IdCliente and year(fechaini) = @Anio and month(fechaini) = @Mes
-",
-                    new { IdCliente = idCliente, Mes = mes, Anio = anio }
-                );
-                dashboardData.Supervision = supervisionTotal;
-
-                // EVALUACION Total
-                var evaluacionTotal = connection.QueryFirstOrDefault<int>(
-                    @"select count(id_campania) as EvaluacionTotal from tb_encuesta_registro where id_cliente = @IdCliente and year(fecha) = @Anio and month(fecha) = @Mes
-",
-                    new { IdCliente = idCliente, Mes = mes, Anio = anio }
-                );
-                dashboardData.Evaluaciones = evaluacionTotal;
-
-                // CLIENTE INMUEBLES
-                var clienteInmuebles = connection.Query<SucursalesDTO>(
-                    @"SELECT IdSucursal, Sucursal, Cantidad
-FROM (
-    SELECT 0 as IdSucursal, 'TOTAL' as Sucursal, ISNULL(SUM(b.cantidad), 0) as Cantidad
-    FROM tb_cliente_inmueble a
-    LEFT OUTER JOIN tb_cliente_plantilla b ON a.id_inmueble = b.id_inmueble
-    WHERE id_cliente = @IdCliente AND a.id_status = 1 AND b.id_status = 1
-    GROUP BY a.id_cliente
-    UNION ALL
-    SELECT a.id_inmueble, RTRIM(nombre) as nombre, ISNULL(SUM(b.cantidad), 0) as Cantidad
-    FROM tb_cliente_inmueble a
-    LEFT OUTER JOIN tb_cliente_plantilla b ON a.id_inmueble = b.id_inmueble
-    WHERE 
-	id_cliente = @IdCliente 
-	AND a.id_status = 1 
-	AND b.id_status = 1
-    GROUP BY a.id_inmueble, nombre
-) AS tabla",
-                    new { IdCliente = idCliente }
-                );
-                dashboardData.Sucursales = clienteInmuebles.ToList();
-
-                // ASISTENCIA GRAFICA TOTAL
-                var asistenciaMes = connection.Query<AsistenciaMesDTO>(
-                    @"select day(fecha) as Fecha, count(movimiento) as Asistencia
-From tb_empleado_asistencia a inner Join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
-month(fecha) = @Mes 
-and YEAR (fecha) = @Anio 
-and b.id_cliente  = @IdCliente  
-AND movimiento = 'A'
-Group By fecha Order By fecha",
-                    new { IdCliente = idCliente, Mes = mes, Anio = anio }
-                );
-                dashboardData.AsistenciaMes = asistenciaMes.ToList();
-
-                // ASISTENCIA PASTEL TOTAL
-                var incidenciaDTOs = connection.Query<IncidenciaDTO>(
-                    @"select case when movimiento = 'A' then 'Asistencia' when movimiento ='F' then 'falta' else  'Otro' end as Movimiento,
-count(movimiento) as Total from tb_empleado_asistencia a inner join tb_cliente_inmueble  b on a.id_inmueble = b.id_inmueble where 
-b.id_cliente = @IdCliente  
-and month(fecha) = @Mes 
-and YEAR (fecha) = @Anio  
-group by movimiento",
-                    new { IdCliente = idCliente, Mes = mes, Anio = anio }
-                );
-                dashboardData.Incidencia = incidenciaDTOs.ToList();
-
-                return dashboardData;
-            }
         }
 
         public async Task<List<Sucursales>> GetSucursalesidCliente(int IdCliente)

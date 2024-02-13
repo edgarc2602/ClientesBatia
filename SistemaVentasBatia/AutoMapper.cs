@@ -23,6 +23,10 @@ namespace SistemaClientesBatia
             CreateMap<AsistenciaMesDTO,AsistenciaMes>();
             CreateMap<Incidencia,IncidenciaDTO>();
             CreateMap<IncidenciaDTO,Incidencia>();
+            CreateMap<Evaluacion,EvaluacionDTO>();
+            CreateMap<EvaluacionDTO,Evaluacion>();
+            CreateMap<Supervision,SupervisionDTO>();
+            CreateMap<SupervisionDTO,Supervision>();
         }
     }
 }

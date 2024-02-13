@@ -62,16 +62,16 @@ namespace SistemaClientesBatia
             // Services
             services.AddScoped<ICatalogosService, CatalogosService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
-            //services.AddScoped<IEntregaService, EntregaService>();
-            //services.AddScoped<IFacturaService, FacturaService>();
             services.AddScoped<ITicketService, TicketService>();
+            services.AddScoped<ISupervisionService, SupervisionService>();
+            services.AddScoped<IEvaluacionService, EvaluacionService>();
 
             // Repositories
             services.AddScoped<ICatalogosRepository, CatalogosRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            //services.AddScoped<IEntregaRepository, EntregaRepository>();
-            //services.AddScoped<IFacturaRepository, FacturaRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
+            services.AddScoped<ISupervisionRepository, SupervisionRepository>();
+            services.AddScoped<IEvaluacionRepository, EvaluacionRepository>();
 
 
         }

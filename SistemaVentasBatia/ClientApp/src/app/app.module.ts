@@ -21,10 +21,10 @@ import { DashboardComponent } from './exclusivo/dashboard/dashboard.component';
 import { TicketComponent } from '../app/exclusivo/ticket/ticket.component';
 
 import { GeneraTicketWidget } from './widgets/generaticket/generaticket.widget';
-import { CargarAcuseEntregaWidget } from './widgets/cargaracuseentrega/cargaracuseentrega.widget';
-import { CargarFacturaWidget } from './widgets/cargarfactura/cargarfactura.widget';
 import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EvaluacionWidget } from './widgets/evaluacion/evaluacion.widget'
+import { SupervisionWidget } from './widgets/supervision/supervision.widget'
 
  
 
@@ -37,17 +37,16 @@ import { ReactiveFormsModule } from '@angular/forms';
         ExclusivoComponent,
         ExMenuComponent,
         LatMenuComponent,
-        
+        DashboardComponent,
+        TicketComponent,
+
         PaginaWidget,
         ToastWidget,
         EliminaWidget,
         GeneraTicketWidget,
-        CargarAcuseEntregaWidget,
-        CargarFacturaWidget,
-
-        DashboardComponent,
-        TicketComponent,
         ConfirmaWidget,
+        EvaluacionWidget,
+        SupervisionWidget
         
     ],
     imports: [

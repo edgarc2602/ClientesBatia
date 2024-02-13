@@ -1,0 +1,141 @@
+<meta charset="UTF-8">
+<div class="modal fade modal-xl" id="modalSupervision" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <meta charset="UTF-8">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <div class="row col-12 align-items-center ">
+                    <div class="col-md-4 col-sm-10 col-12 text-start">
+                        <h4 class="modal-title">Supervisiones</h4>
+                    </div>
+                    <div class="col-md-2 col-sm-10 col-12 text-end">
+                    </div>
+                    <div class="col-md-3 col-6 ">
+                        <div class="form-floating shadow-sm">
+                            <input type="number" class="form-control" [(ngModel)]="param.anio" (change)="obtenerSupervisiones(1)" [disabled]="isLoading" id="anio">
+                            <label for="anio">Año</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 ">
+                        <div class="form-floating shadow-sm">
+                            <select class="form-select" [(ngModel)]="param.mes" (change)="obtenerSupervisiones(1)" [disabled]="isLoading" id="mes">
+                                <option *ngFor="let m of mesesc" [ngValue]="m.id">{{ m.descripcion }}</option>
+                            </select>
+                            <label for="mes">Mes</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div *ngIf="isLoading || (model.supervisiones && model.supervisiones.length === 0)" class="row-12 text-center">
+                    <h6 *ngIf="isLoading">Cargando...</h6>
+                    <h6 *ngIf="!isLoading && model.supervisiones && model.supervisiones.length === 0">No se encontraron registros</h6>
+                </div>
+                <div *ngIf="isLoading" class="text-center ">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                </div>
+                <div *ngIf="model.supervisiones && model.supervisiones.length > 0" class="fade-in-container" style="max-height: 350px; border-radius: 10px; overflow-y:auto; overflow-x:hidden;">
+                    <table class="table table-borderless table-striped table-responsive">
+                        <thead class="sticky-top">
+                            <tr class="text-start sticky-top d-md-none align-items-center">
+                                <th>Supervisiones</th>
+                                <!--<th></th>-->
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="row align-items-center" style="font-weight: bold;">
+                                        <div class="col-md-1 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Id</span>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Punto de atención</span>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Supervisor</span>
+                                        </div>
+                                        <div class="col-md-1 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Entrevista cliente</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Nombre</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Calif. General</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!--<td>
+                        <div>
+                            <div class="col-md-12 col-sm-12 col-12">
+                            </div>
+                        </div>
+                    </td>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let s of model.supervisiones">
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-1 col-sm-6 col-5">
+                                            <span class="badge d-md-none">Id:</span>
+                                            <div class=" ms-2">{{ s.idSupervision }}</div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-5">
+                                            <span class="badge d-md-none">Punto de atención:</span>
+                                            <div class=" ms-2">{{ s.inmueble }}</div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-7">
+                                            <span class="badge d-md-none">Supervisor:</span>
+                                            <div class="ms-2">{{ s.usuario }}</div>
+                                        </div>
+                                        <div class="col-md-1 col-sm-6 col-5">
+                                            <span class="badge d-md-none">Entrevista cliente:</span>
+                                            <div class="ms-2">{{ s.entrevista }}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-7">
+                                            <span class="badge d-md-none">Nombre:</span>
+                                            <div class="ms-2">{{ s.clienteNombre }}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-2">
+                                            <span class="badge d-md-none">Calif. General:</span>
+                                            <div class="ms-2">{{ s.calificacion }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!--<td class="text-center">
+                        <div>
+
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <button type="button" class="btn btn-lg text-primary" (click)="obtenerMateriales(listado.idListado, listado.nombreSucursal, listado.tipo, listado.prefijo)" data-bs-toggle="tooltip" title="Ver lista">
+                                    <i class="fa-solid fa-list" style="color: darkslategray;"></i>
+                                </button>
+                                <button type="button" class="btn btn-lg text-secondary"
+                                        (click)="verAcuses(listado.idListado, listado.nombreSucursal, listado.tipo, listado.prefijo)"
+                                        data-bs-toggle="tooltip" title="Acuse"
+                                        [disabled]="listado.estatus === 'Entregado'">
+                                    <i class="fa-solid fa-file-circle-check" style="color: #0d6efd;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>-->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div *ngIf="model.supervisiones && model.supervisiones.length > 0">
+                    <br />
+                    <pagina-widget [pagina]="model.pagina" [numPaginas]="model.numPaginas" [rows]="model.rows" (chgEvent)="muevePagina($event)"></pagina-widget>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="row"></div>
+                <button type="button" (click)="close()" class="btn btn-outline-secondary"> Regresar</button>
+            </div>
+        </div>
+    </div>
+</div>

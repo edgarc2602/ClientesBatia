@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+﻿import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { fadeInOut } from 'src/app/fade-in-out';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +8,8 @@ import { Dashboard } from '../../models/dashboard';
 import { ParamDashboard } from '../../models/paramdashboard'
 import Swal from 'sweetalert2';
 import { Sucursales } from '../../models/sucursales';
+import { EvaluacionWidget } from '../../widgets/evaluacion/evaluacion.widget'
+import { SupervisionWidget } from '../../widgets/supervision/supervision.widget'
 
 @Component({
     selector: 'dashboard-comp',
@@ -25,6 +27,8 @@ export class DashboardComponent implements OnInit {
     selectedRow: any;
     sucursaln: string = '';
     sucursales: Sucursales[];
+    @ViewChild(EvaluacionWidget, { static: false }) EvaWid: EvaluacionWidget;
+    @ViewChild(SupervisionWidget, { static: false }) SupWid: SupervisionWidget;
 
 
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser) {
@@ -32,6 +36,13 @@ export class DashboardComponent implements OnInit {
             this.mesesc = response;
         })
         
+    }
+    openSupervisionModal() {
+        this.SupWid.open(this.param.anio, this.param.mes);
+    }
+
+    openEvaluacionModal() {
+        this.EvaWid.open(this.param.anio, this.param.mes);
     }
 
     ngOnInit(): void {
@@ -71,7 +82,7 @@ export class DashboardComponent implements OnInit {
         this.param.idInmueble = this.idSucursal;
         this.param.idCliente = this.user.idInterno;
         this.dashboard = {
-            asistencia: 0, entregas: 0, supervision: 0, evaluaciones: 0, sucursales: [], asistenciaMes: [], incidencia: []
+            asistencia: 0, entregas: 0, supervision: 0, evaluaciones: 0, asistenciaMes: [], incidencia: []
         };
         this.http.post<Dashboard>(`${this.url}api/usuario/getDashboard`, this.param).subscribe(response => {
             this.dashboard = response;

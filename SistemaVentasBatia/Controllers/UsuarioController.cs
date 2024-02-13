@@ -31,12 +31,6 @@ namespace SistemaClientesBatia.Controllers
             return await _logic.GetDashboard(param);
         }
 
-        [HttpPost("[action]")]
-        public DashboardDTO GetDashboardData(ParamDashboardDTO param)
-        {
-            return _logic.GetDashboardData(param);
-        }
-
         [HttpGet("[action]/{idCliente}")]
         public async Task <List<SucursalesDTO>> GetSucursales (int idCliente)
         {

@@ -171,9 +171,6 @@ html {
     vertical-align: middle;
 }
 
-.table tbody {
-    backdrop-filter: blur(5px);
-}
 
 thead.sticky-top {
     z-index: 99;
@@ -181,18 +178,6 @@ thead.sticky-top {
 
 align-middle {
     vertical-align: middle;
-}
-
-.modal.show::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    backdrop-filter: blur(5px);
-    animation: blurAnimation 0.8s;
-    z-index: -1;
 }
 
 @keyframes blurAnimation {
@@ -488,6 +473,43 @@ input:focus::-webkit-input-placeholder {
     transition: box-shadow 0.3s ease;
     background-color: #E2FFFE;
 }
+
+.fade-in-container {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.fade-in-container {
+    opacity: 0;
+    transition: opacity 0.5s ease; /* Transición de opacidad durante 0.5 segundos */
+}
+
+    .fade-in-container.ng-enter {
+        animation: fadeIn 0.5s ease; /* Animación de desvanecimiento al aparecer */
+    }
+
+    .fade-in-container.ng-leave {
+        opacity: 1; /* Asegura que el elemento esté completamente visible mientras se va */
+    }
+
+    .fade-in-container.ng-leave-active {
+        opacity: 0; /* Durante la transición, la opacidad disminuirá gradualmente a 0 */
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+.modal-dialog {
+    transition: all 0.9s ease; /* Transición suave para todas las propiedades con duración de 0.3 segundos */
+}
+
+
 /* Tema obscuro
 -------------------------------------------------- */
 .dark-theme {
@@ -513,7 +535,7 @@ input:focus::-webkit-input-placeholder {
     }
 
     .dark-theme input {
-        background-color: #383434;
+        background-color: rgba(56, 52, 52, 0.5);
         color: #fff;
         border-color: #383434;
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
@@ -537,9 +559,9 @@ input:focus::-webkit-input-placeholder {
         }
 
     .dark-theme table tbody tr td {
+        border: none;
         color: #fff;
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
-        backdrop-filter: blur(5px);
     }
 
     .dark-theme table.table-striped tbody tr:nth-of-type(odd) td {
@@ -558,7 +580,6 @@ input:focus::-webkit-input-placeholder {
         backdrop-filter: blur(2px);
         transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
-
 
     .dark-theme #sidebarMenu {
         background-color: rgba(21, 21, 21, 0.8);
@@ -591,14 +612,14 @@ input:focus::-webkit-input-placeholder {
     }
 
     .dark-theme tbody tr:hover {
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         transition: box-shadow 0.3s ease;
         background-color: #383434;
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
     }
 
     .dark-theme tbody tr:focus {
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         transition: box-shadow 0.3s ease;
         background-color: #383434;
         color: #fff;
@@ -606,7 +627,7 @@ input:focus::-webkit-input-placeholder {
     }
 
     .dark-theme .box-shadow {
-        box-shadow: 0 .25rem .75rem rgba(255, 255, 255, .05);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
     }
 
@@ -666,18 +687,21 @@ input:focus::-webkit-input-placeholder {
         background-color: #383434;
         color: #fff;
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
+        border: none;
     }
 
     .dark-theme .modal-body {
         background-color: #282424;
         color: #fff;
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
+        border: none;
     }
 
     .dark-theme .modal-footer {
         background-color: #383434;
         color: #fff;
         transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
+        border: none;
     }
 
     .dark-theme .card {
@@ -719,7 +743,7 @@ input:focus::-webkit-input-placeholder {
     }
 
         .dark-theme .btn:hover {
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .dark-theme .btn:active {
@@ -777,6 +801,13 @@ input:focus::-webkit-input-placeholder {
         .sidebar .nav-link.active .feather {
             color: inherit;
         }
+
+
+    .dark-theme .selected {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transition: box-shadow 0.3s ease;
+        background-color: #282424;
+    }
 
 .loading-bar {
     position: relative;

@@ -1,20 +1,20 @@
-<nav id="sidebarMenu" class="col-md-auto d-md-none  sidebar collapse-horizontal collapse box-shadow shadow-sm translucent">
+<nav id="sidebarMenu" class="col-md-auto d-md-none  sidebar collapse-horizontal collapse text-center">
     <ul class="nav d-flex flex-column justify-content-center h-100 pt-2">
         <li class="nav-item mb-3 text-sm-start text-md-center">
             <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" [routerLink]="['/exclusivo']" [routerLinkActive]='["active"]' [routerLinkActiveOptions]="{ exact: true }" aria-current="page">
                 <div data-bs-toggle="tooltip" data-bs-placement="right">
-                    <span> <i class="fa-solid fa-gauge fa-2x"></i></span>
-                    <div class="d-block d-md-none"><h6>DASHBOARD</h6></div>
-                    <hr class="d-block d-md-none" />
+                    <span> <i class="fa-solid fa-gauge fa-2x mb-2"></i></span>
+                    <div><h6>DASHBOARD</h6></div>
+                    <hr/>
                 </div>
             </a>
         </li>
         <li class="nav-item mb-3 text-sm-start text-md-center">
             <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" [routerLink]="['/exclusivo/ticket']" [routerLinkActive]='["active"]' aria-current="page">
                 <div data-bs-toggle="tooltip" data-bs-placement="right">
-                    <span><i class="fa-solid fa-file-invoice fa-2x"></i></span>
-                    <div class=" d-block d-md-none"><h6>TICKETS</h6></div>
-                    <hr class="d-block d-md-none" />
+                    <span><i class="fa-solid fa-file-invoice fa-2x mb-2"></i></span>
+                    <div><h6>TICKETS</h6></div>
+                    <hr/>
                 </div>
             </a>
         </li>
@@ -39,18 +39,18 @@
         <li class="nav-item mb-3 text-sm-start text-md-center">
             <a *ngIf="isDarkTheme" class="nav-link"  data-bs-toggle="collapse"  data-bs-target="#sidebarMenu" (click)="toggleTheme()">
                 <div data-bs-toggle="tooltip" data-bs-placement="right">
-                    <span> <i class="fa-solid fa-sun fa-2x " style="color: lightgray;"></i></span>
-                    <div class=" d-block d-md-none"><h6>TEMA</h6></div>
-                    <hr class="d-block d-md-none" />
+                    <span> <i class="fa-solid fa-sun fa-2x mb-2" style="color: lightgray;"></i></span>
+                    <div><h6>TEMA</h6></div>
+                    <hr/>
                 </div>
             </a>
         </li>
         <li class="nav-item mb-3 text-sm-start text-md-center">
             <a *ngIf="!isDarkTheme" class="nav-link"  data-bs-toggle="collapse"  data-bs-target="#sidebarMenu" (click)="toggleTheme()">
                 <div data-bs-toggle="tooltip" data-bs-placement="right">
-                    <span> <i class="fa-solid fa-moon fa-2x" style="color: #333333;"></i></span>
-                    <div class=" d-block d-md-none"><h6>TEMA</h6></div>
-                    <hr class="d-block d-md-none" />
+                    <span> <i class="fa-solid fa-moon fa-2x mb-2" style="color: #333333;"></i></span>
+                    <div><h6>TEMA</h6></div>
+                    <hr/>
                 </div>
             </a>
         </li>

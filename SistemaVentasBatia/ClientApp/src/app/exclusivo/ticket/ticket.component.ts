@@ -83,6 +83,7 @@ export class TicketComponent {
     }
 
     muevePagina(event) {
+        this.quitarFocoDeElementos();
         this.model.pagina = event;
         this.obtenerTickets(1);
     }
@@ -93,5 +94,12 @@ export class TicketComponent {
         this.confirma.titulo = 'Cerrar ticket'
         this.confirma.mensaje = 'El estatus cambiará a "Cerrado", esta acción no se puede revertir'
         this.confirma.open();
+    }
+
+    quitarFocoDeElementos(): void {
+        const elementos = document.querySelectorAll('button, input[type="text"]');
+        elementos.forEach((elemento: HTMLElement) => {
+            elemento.blur();
+        });
     }
 }

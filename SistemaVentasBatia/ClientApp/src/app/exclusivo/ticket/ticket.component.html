@@ -8,29 +8,29 @@
     <div class="row">
         <div class="col-md-2 col-6 mb-3">
             <div class="form-floating">
-                <select class="form-select" aria-label="Prioridad" [(ngModel)]="prioridadsl" (change)="obtenerTickets(1)">
+                <select class="form-select" aria-label="Prioridad" [(ngModel)]="prioridadsl" (change)="obtenerTickets(1)" id="idPrioridad">
                     <option value="0">Seleccione...</option>
                     <option *ngFor="let p of prioridad" [ngValue]="p.id">{{ p.descripcion }}</option>
                 </select>
-                <label for="Prioridad">Prioridad</label>
+                <label for="idPrioridad">Prioridad</label>
             </div>
         </div>
         <div class="col-md-3 col-6 mb-3">
             <div class="form-floating">
-                <select class="form-select" aria-label="Categoria" [(ngModel)]="categoriasl" (change)="obtenerTickets(1)">
+                <select class="form-select" aria-label="Categoria" [(ngModel)]="categoriasl" (change)="obtenerTickets(1)" id="idCategoria">
                     <option value="0">Seleccione...</option>
                     <option *ngFor="let c of categoria" [ngValue]="c.id">{{ c.descripcion }}</option>
                 </select>
-                <label for="Categoria">Categoria</label>
+                <label for="idCategoria">Categoria</label>
             </div>
         </div>
         <div class="col-md-2 col-6 mb-3">
             <div class="form-floating">
-                <select class="form-select" aria-label="Estatus" [(ngModel)]="statussl" (change)="obtenerTickets(1)">
+                <select class="form-select" aria-label="Estatus" [(ngModel)]="statussl" (change)="obtenerTickets(1)" id="idStatus">
                     <option value="0">Seleccione...</option>
                     <option *ngFor="let s of status" [ngValue]="s.id">{{ s.descripcion }}</option>
                 </select>
-                <label for="Estatus">Estatus</label>
+                <label for="idStatus">Estatus</label>
             </div>
         </div>
 

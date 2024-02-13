@@ -31,9 +31,7 @@
 	<ItemGroup>
 	  <None Remove="ClientApp\logo_fondo.png" />
 	  <None Remove="ClientApp\src\app\models\acceso.ts" />
-	  <None Remove="ClientApp\src\app\models\listadomateriales.ts" />
 	  <None Remove="ClientApp\src\app\models\usuario.ts" />
-	  <None Remove="ClientApp\src\app\models\usuarioregistro.ts" />
 	  <None Remove="ClientApp\src\app\stores\StoreUser.ts" />
 	  <None Remove="ClientApp\src\logo_fondo.png" />
 	</ItemGroup>
@@ -53,12 +51,6 @@
 
 	<ItemGroup>
 	  <TypeScriptCompile Include="ClientApp\src\app\models\acceso.ts" />
-	  <TypeScriptCompile Include="ClientApp\src\app\models\listadomateriales.ts">
-	    <SubType>Code</SubType>
-	  </TypeScriptCompile>
-	  <TypeScriptCompile Include="ClientApp\src\app\models\usuarioregistro.ts">
-	    <SubType>Code</SubType>
-	  </TypeScriptCompile>
 	  <TypeScriptCompile Include="ClientApp\src\app\models\usuario.ts" />
 	  <TypeScriptCompile Include="ClientApp\src\app\stores\StoreUser.ts" />
 	</ItemGroup>

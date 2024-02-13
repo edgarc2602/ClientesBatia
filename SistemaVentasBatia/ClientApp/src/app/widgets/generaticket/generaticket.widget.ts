@@ -1,6 +1,5 @@
 import { Component, OnChanges, Output, EventEmitter, SimpleChanges, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DetalleMaterial } from '../../models/detallematerial';
 import { Catalogo } from 'src/app/models/catalogo';
 import { Ticket } from 'src/app/models/ticket';
 import Swal from 'sweetalert2';
@@ -67,7 +66,7 @@ export class GeneraTicketWidget {
     }
     obtenerValoresForm() {
         const formValues = this.miFormulario.getRawValue();
-        this.model.idCliente = this.user.idPersonal;
+        this.model.idCliente = this.user.idInterno;
         this.model.nombre = formValues.nombref;
         this.model.email = formValues.emailf;
         this.model.descripcion = formValues.descripcionf;
@@ -76,6 +75,7 @@ export class GeneraTicketWidget {
     }
 
     guardarTicket() {
+        this.quitarFocoDeElementos();
         if (this.miFormulario.valid) {
             this.obtenerValoresForm();
             this.http.post<boolean>(`${this.url}api/Ticket/GuardarTicket`, this.model).subscribe(response => {

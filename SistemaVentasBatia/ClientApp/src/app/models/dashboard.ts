@@ -7,7 +7,6 @@ export interface Dashboard {
     entregas: number;
     supervision: number;
     evaluaciones: number;
-    sucursales: Sucursales[];
     asistenciaMes: AsistenciaMes[];
     incidencia: Incidencia[];
 }
