@@ -1,5 +1,6 @@
-<body class="bodycss fadeIn">
-    <div [@fadeInOut]>
+<div [@fadeInOut]>
+    <body class="bodycss">
+
         <br />
         <div class="row">
             <div class="col-mid">
@@ -29,6 +30,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
+</div>
 <toast-widget [events]="evenSub.asObservable()" [isError]="isErr" [message]="errMessage"></toast-widget>

@@ -13,16 +13,16 @@
                     </div>
                     <div class="col-md-2 col-6 ">
                         <div class="form-floating">
-                            <input type="number" class="form-control custom-input" [(ngModel)]="param.anio"id="anio" disabled>
-                            <label for="anio">Año</label>
+                            <input type="number" class="form-control custom-input" [(ngModel)]="param.anio"id="anioSup" disabled>
+                            <label for="anioSup">Año</label>
                         </div>
                     </div>
                     <div class="col-md-2 col-6 ">
                         <div class="form-floating">
-                            <select class="form-select custom-input" [(ngModel)]="param.mes" id="mes" disabled>
+                            <select class="form-select custom-input" [(ngModel)]="param.mes" id="mesSup" disabled>
                                 <option *ngFor="let m of mesesc" [ngValue]="m.id">{{ m.descripcion }}</option>
                             </select>
-                            <label for="mes">Mes</label>
+                            <label for="mesSup">Mes</label>
                         </div>
                     </div>
                 </div>
