@@ -10,17 +10,17 @@
                     <div class="col-md-4 col-sm-10 col-12 text-start">
                         <h4 class="modal-title">Encuestas de calidad</h4>
                     </div>
-                    <div class="col-md-2 col-sm-10 col-12 text-end">
+                    <div class="col-md-4 col-sm-10 col-12 text-end">
                     </div>
-                    <div class="col-md-3 col-6 ">
-                        <div class="form-floating shadow-sm">
-                            <input type="number" class="form-control" [(ngModel)]="param.anio" (change)="obtenerEvaluaciones(1)" [disabled]="isLoading" id="anio">
+                    <div class="col-md-2 col-6 ">
+                        <div class="form-floating">
+                            <input type="number" class="form-control custom-input" [(ngModel)]="param.anio" id="anio" disabled>
                             <label for="anio">Año</label>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6 ">
-                        <div class="form-floating shadow-sm">
-                            <select class="form-select" [(ngModel)]="param.mes" (change)="obtenerEvaluaciones(1)" [disabled]="isLoading" id="mes">
+                    <div class="col-md-2 col-6 ">
+                        <div class="form-floating">
+                            <select class="form-select custom-input" [(ngModel)]="param.mes" id="mes" disabled>
                                 <option *ngFor="let m of mesesc" [ngValue]="m.id">{{ m.descripcion }}</option>
                             </select>
                             <label for="mes">Mes</label>
@@ -38,7 +38,7 @@
                 <div *ngIf="isLoading" class="text-center ">
                     <i class="fas fa-spinner fa-spin fa-3x" style="color: #0d6efd"></i>
                 </div>
-                <div *ngIf="model.evaluaciones && model.evaluaciones.length > 0" class="fade-in-container" style="max-height: 350px; border-radius: 10px; overflow-y:auto; overflow-x:hidden;">
+                <div *ngIf="model.evaluaciones && model.evaluaciones.length > 0" class="fade-in-container box-shadow" style="max-height: 350px; border-radius: 10px; overflow-y:auto; overflow-x:hidden;">
                     <table class="table table-borderless table-striped table-responsive">
                         <thead class="sticky-top">
                             <tr class="text-start sticky-top">
@@ -55,17 +55,17 @@
                                             <span class="badge">Id:</span>
                                             <div class=" ms-2">{{ e.idCampania }}</div>
                                         </div>
-                                        <div class="col-md-3 col-sm-6 col-6">
-                                            <span class="badge">Punto de atención:</span>
-                                            <div class=" ms-2">{{ e.inmueble }}</div>
+                                        <div class="col-md-1 col-sm-6 col-6">
+                                            <span class="badge">F. Alta:</span>
+                                            <div class="ms-2">{{ e.fecha }}</div>
                                         </div>
                                         <div class="col-md-3 col-sm-6 col-6">
                                             <span class="badge">Encuesta:</span>
                                             <div class="ms-2">{{ e.encuesta }}</div>
                                         </div>
-                                        <div class="col-md-1 col-sm-6 col-6">
-                                            <span class="badge">F. Alta:</span>
-                                            <div class="ms-2">{{ e.fecha }}</div>
+                                        <div class="col-md-3 col-sm-6 col-6">
+                                            <span class="badge">Punto de atención:</span>
+                                            <div class=" ms-2">{{ e.inmueble }}</div>
                                         </div>
                                         <div class="col-md-4 col-sm-6 col-6">
                                             <span class="badge">Persona encuestada:</span>

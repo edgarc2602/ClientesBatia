@@ -38,42 +38,81 @@
             <a class="btn btn-outline-primary" (click)="generaTicketWidget()"><i class="fa-solid fa-plus"></i>  Nuevo ticket</a>
         </div>
     </div>
-    <div class="row box-shadow d-md-none" style="border-radius: 10px; overflow-x: hidden;">
-        <div style="max-height: 450px; overflow-y: auto;">
+    <div *ngIf="isLoading || (model.tickets && model.tickets.length === 0)" class="row-12 text-center">
+        <br/>
+        <h6 *ngIf="isLoading">Cargando...</h6>
+        <h6 *ngIf="!isLoading && model.tickets && model.tickets.length === 0">No se encontraron registros</h6>
+    </div>
+    <div *ngIf="isLoading" class="text-center ">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+    </div>
+    <div *ngIf="model.tickets && model.tickets.length > 0" class="fade-in-container" style="border-radius: 10px; overflow-x: hidden;">
+        <div style="max-height: 450px; overflow-y: auto; overflow-x: hidden;">
             <div class="row">
-                <table class="table table-borderless table-striped table-responsive text-center">
+                <table class="table table-borderless table-striped table-responsive">
                     <thead class="sticky-top">
-                        <tr class="text-start sticky-top">
+                        <tr class="text-start sticky-top d-md-none align-items-center">
                             <th>Listados</th>
                             <th>Cerrar</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="row" style="font-weight: bold;">
+                                    <div class="col-md-1 col-sm-6 col-2">
+                                        <span class="text-white d-none d-md-block text-center">Id</span>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-8">
+                                        <span class="text-white d-none d-md-block">Categoria</span>
+                                    </div>
+                                    <div class="col-md-1 col-sm-6 col-8">
+                                        <span class="text-white d-none d-md-block">Prioridad</span>
+                                    </div>
+                                    <div class="col-md-1 col-sm-6 col-2">
+                                        <span class="text-white d-none d-md-block">Estatus</span>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6 col-3">
+                                        <span class="text-white d-none d-md-block">F.Alta</span>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-3">
+                                        <span class="text-white d-none d-md-block">Descripcion</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <div class="col-md-12 col-sm-12 col-12 text-center">
+                                        <span class="text-white d-none d-md-block">Cerrar</span>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let t of model.tickets">
                             <td>
                                 <div class="row text-start">
-                                    <div class="col-md-1 col-sm-6 col-2">
-                                        <span class="badge ">Id:</span>
-                                        <div class=" ms-2">{{ t.idClienteTicket }}</div>
+                                    <div class="col-md-1 col-sm-6 col-2 text-center">
+                                        <span class="badge d-md-none ">Id:</span>
+                                        <div class=" ms-2 ">{{ t.idClienteTicket }}</div>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-4">
-                                        <span class="badge">Categoria:</span>
+                                    <div class="col-md-3 col-sm-6 col-4">
+                                        <span class="badge d-md-none">Categoria:</span>
                                         <div class="ms-2">{{ t.categoria }}</div>
                                     </div>
                                     <div class="col-md-1 col-sm-6 col-3">
-                                        <span class="badge">Prioridad:</span>
+                                        <span class="badge d-md-none">Prioridad:</span>
                                         <div class="ms-2">{{ t.prioridad }}</div>
                                     </div>
                                     <div class="col-md-1 col-sm-6 col-3">
-                                        <span class="badge">Estatus:</span>
+                                        <span class="badge d-md-none">Estatus:</span>
                                         <div class="ms-2">{{ t.status }}</div>
                                     </div>
                                     <div class="col-md-2 col-sm-6 col-4">
-                                        <span class="badge">F.Alta:</span>
+                                        <span class="badge d-md-none">F.Alta:</span>
                                         <div class="ms-2">{{ t.fechaAlta | date: 'dd-MM-yyyy' }}</div>
                                     </div>
-                                    <div class="col-md-5 col-sm-6 col-8">
-                                        <span class="badge">Descripción:</span>
+                                    <div class="col-md-4 col-sm-6 col-8">
+                                        <span class="badge d-md-none">Descripción:</span>
                                         <div class="ms-2" style="font-size: smaller;">{{ t.descripcion }}</div>
                                     </div>
                                 </div>
@@ -101,95 +140,10 @@
             </div>
         </div>
     </div>
-
-    <div class="row box-shadow d-none d-md-block" style="border-radius: 10px; overflow-x: hidden;">
-        <div style="max-height: 450px; overflow-y: auto;">
-            <div class="row">
-                <table class="table table-borderless table-striped table-responsive text-center">
-                    <thead class="sticky-top text-white text-start">
-                        <tr>
-                            <td>
-                                <div class="row" style="font-weight: bold;">
-                                    <div class="col-md-1 col-sm-6 col-2 text-center">
-                                        <span class="text-white d-none d-md-block">Id</span>
-                                    </div>
-                                    <div class="col-md-2 col-sm-6 col-8 text-center">
-                                        <span class="text-white d-none d-md-block">Categoria</span>
-                                    </div>
-                                    <div class="col-md-1 col-sm-6 col-8 text-center">
-                                        <span class="text-white">Prioridad</span>
-                                    </div>
-                                    <div class="col-md-1 col-sm-6 col-2 text-center">
-                                        <span class="text-white">Estatus</span>
-                                    </div>
-                                    <div class="col-md-2 col-sm-6 col-3 text-center">
-                                        <span class="text-white">F.Alta</span>
-                                    </div>
-                                    <div class="col-md-5 col-sm-6 col-3">
-                                        <span class="text-white" >Descripcion</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div>
-                                    <div class="col-md-12 col-sm-12 col-12 text-center">
-                                        <span class="text-white">Cerrar</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let t of model.tickets">
-                            <td>
-                                <div class="row text-start">
-                                    <div class="col-md-1 col-sm-6 col-2 text-center">
-                                        <div class=" ms-2">{{ t.idClienteTicket }}</div>
-                                    </div>
-                                    <div class="col-md-2 col-sm-6 col-2 text-center">
-                                        <div class="ms-2">{{ t.categoria }}</div>
-                                    </div>
-                                    <div class="col-md-1 col-sm-6 col-3 text-center">
-                                        <div class="ms-2">{{ t.prioridad }}</div>
-                                    </div>
-                                    <div class="col-md-1 col-sm-6 col-3 text-center">
-                                        <div class="ms-2">{{ t.status }}</div>
-                                    </div>
-                                    <div class="col-md-2 col-sm-6 col-3 text-center">
-                                        <div class="ms-2">{{ t.fechaAlta | date: 'dd-MM-yyyy' }}</div>
-                                    </div>
-                                    <div class="col-md-5 col-sm-6 col-8">
-                                        <div class="ms-2" style="font-size: smaller;">{{ t.descripcion }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <div>
-                                    <div class="col-12 col-md-12 col-sm-12">
-                                        <button type="button" class="btn btn-lg text-primary position-relative"
-                                                (click)="valida(t.idClienteTicket)"
-                                                data-bs-toggle="tooltip" title="Cerrar ticket"
-                                                [disabled]="t.status === 'Cerrado'">
-                                            <ng-container *ngIf="t.status === 'Cerrado'; else openTicketIcon">
-                                                <i class="fa-solid fa-check" style="color: forestgreen"  [ngClass]="{'text-muted': t.status === 'Cerrado'}"></i>
-                                            </ng-container>
-                                            <ng-template #openTicketIcon>
-                                                <i class="fa-solid fa-clipboard-check" [ngClass]="{'text-muted': t.status === 'Cerrado'}"></i>
-                                            </ng-template>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     <br />
-
-    <pagina-widget [pagina]="model.pagina" [numPaginas]="model.numPaginas" [rows]="model.rows" (chgEvent)="muevePagina($event)"></pagina-widget>
+    <div *ngIf="model.tickets && model.tickets.length > 0">
+        <pagina-widget [pagina]="model.pagina" [numPaginas]="model.numPaginas" [rows]="model.rows" (chgEvent)="muevePagina($event)"></pagina-widget>
+    </div>
 </div>
 <generaticket-widget (ansEvent)="obtenerTickets($event)"></generaticket-widget>
 <confirma-widget (confirmaEvent) ="cerrarTicket($event)"></confirma-widget>

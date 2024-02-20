@@ -20,7 +20,7 @@ namespace SistemaClientesBatia.Repositories
     public interface ISupervisionRepository
     {
         Task<int> ContarSupervisiones(ParamDashboardDTO param);
-        Task<List<Supervision>> ObtenerSupervisiones(int mes, int anio, int idCliente, int pagina);
+        Task<List<Supervision>> ObtenerSupervisiones(int mes, int anio, int idCliente, int pagina, int idInmueble);
     }
 
     public class SupervisionRepository : ISupervisionRepository
@@ -39,6 +39,7 @@ SELECT
 count(a.id_supervision) Rows 
 FROM tb_supervision a
 WHERE MONTH(a.fechaini) = @Mes
+and ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
 AND YEAR(a.fechaini) = @Anio
 AND a.id_cliente = @IdCliente
 ";
@@ -55,12 +56,12 @@ AND a.id_cliente = @IdCliente
             return numrows;
         }
 
-        public async Task<List<Supervision>> ObtenerSupervisiones(int mes, int anio, int idCliente, int pagina)
+        public async Task<List<Supervision>> ObtenerSupervisiones(int mes, int anio, int idCliente, int pagina, int idInmueble)
         {
             string query = @"
 SELECT  *   
 FROM (
-SELECT ROW_NUMBER() OVER ( ORDER BY a.id_supervision desc ) AS RowNum,
+SELECT ROW_NUMBER() OVER ( ORDER BY a.fechaini desc ) AS RowNum,
 a.id_supervision IdSupervision,
 a.fechaini Fecha,
 b.nombre Cliente,
@@ -74,6 +75,7 @@ inner join tb_cliente b ON a.id_cliente=b.id_cliente
 LEFT OUTER JOIN tb_cliente_inmueble c ON a.id_inmueble=c.id_inmueble 
 LEFT OUTER JOIN Personal d ON a.usuario=d.IdPersonal
 WHERE MONTH(a.fechaini) = @Mes
+and ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
 AND YEAR(a.fechaini) = @Anio
 AND a.id_cliente = @IdCliente
 ) AS Supervisiones
@@ -85,7 +87,7 @@ ORDER BY RowNum
             try
             {
                 using var connection = _ctx.CreateConnection();
-                supervisiones = (await connection.QueryAsync<Supervision>(query, new { mes,anio,idCliente,pagina})).ToList();
+                supervisiones = (await connection.QueryAsync<Supervision>(query, new { mes,anio,idCliente,pagina,idInmueble})).ToList();
             }
             catch (Exception ex)
             {

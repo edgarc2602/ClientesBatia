@@ -10,6 +10,8 @@ import Swal from 'sweetalert2';
 import { Sucursales } from '../../models/sucursales';
 import { EvaluacionWidget } from '../../widgets/evaluacion/evaluacion.widget'
 import { SupervisionWidget } from '../../widgets/supervision/supervision.widget'
+import accessibility from 'highcharts/modules/accessibility';
+
 
 @Component({
     selector: 'dashboard-comp',
@@ -29,7 +31,7 @@ export class DashboardComponent implements OnInit {
     sucursales: Sucursales[];
     @ViewChild(EvaluacionWidget, { static: false }) EvaWid: EvaluacionWidget;
     @ViewChild(SupervisionWidget, { static: false }) SupWid: SupervisionWidget;
-
+    
 
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser) {
         http.get<Catalogo[]>(`${url}api/catalogo/obtenermeses`).subscribe(response => {
@@ -38,11 +40,11 @@ export class DashboardComponent implements OnInit {
         
     }
     openSupervisionModal() {
-        this.SupWid.open(this.param.anio, this.param.mes);
+        this.SupWid.open(this.param.anio, this.param.mes, this.idSucursal);
     }
 
     openEvaluacionModal() {
-        this.EvaWid.open(this.param.anio, this.param.mes);
+        this.EvaWid.open(this.param.anio, this.param.mes, this.idSucursal);
     }
 
     ngOnInit(): void {
@@ -54,6 +56,7 @@ export class DashboardComponent implements OnInit {
         this.sucursaln = 'Total';
         this.getDashboard('Total');
         this.getSucursales();
+        accessibility(Highcharts);
     }
 
     getSucursales() {
@@ -167,7 +170,7 @@ export class DashboardComponent implements OnInit {
                 }
             },
             tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                headerFormat: '<span style="font-size:10px">Dia:{point.key}</span><table>',
                 pointFormat: '<tr><td style="color:{series.color};padding:0">Total: </td>' +
                     '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
                 footerFormat: '</table>',
@@ -197,7 +200,7 @@ export class DashboardComponent implements OnInit {
                 y: incidencia.total
             };
         });
-        const totalSubtitle = `Total: ${totalIncidencias}`;
+        //const totalSubtitle = `Total: ${totalIncidencias}`;
         Highcharts.chart(container, {
             chart: {
                 type: 'pie'
@@ -205,13 +208,13 @@ export class DashboardComponent implements OnInit {
             title: {
                 text: `Incidencias`
             },
-            subtitle: {
-                text: totalSubtitle,
-                align: 'center',
-                style: {
-                    fontSize: '16px'
-                }
-            },
+            //subtitle: {
+            //    text: totalSubtitle,
+            //    align: 'center',
+            //    style: {
+            //        fontSize: '16px'
+            //    }
+            //},
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
@@ -239,5 +242,12 @@ export class DashboardComponent implements OnInit {
                 enabled: false
             }
         });
+    }
+
+    regresaEva() {
+
+    }
+    regresaSup() {
+
     }
 }

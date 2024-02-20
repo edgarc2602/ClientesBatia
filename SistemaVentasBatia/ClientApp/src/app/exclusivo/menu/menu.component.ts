@@ -27,8 +27,8 @@ export class ExMenuComponent {
     this.isExpanded = false;
   }
 
-  toggle() {
-    this.isExpanded = !this.isExpanded;
+    toggle() {
+            this.isExpanded = !this.isExpanded;
     }
     button() {
         this.visibilidadLatMenu = 0;

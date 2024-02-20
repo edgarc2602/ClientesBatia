@@ -23,18 +23,18 @@ export class SupervisionWidget {
     }
     mesesc: Catalogo[];
     isLoading: boolean = false;
-
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser, private fb: FormBuilder) {
         http.get<Catalogo[]>(`${url}api/catalogo/obtenermeses`).subscribe(response => {
             this.mesesc = response;
         })
     }
 
-    open(anio: number, mes: number) {
+    open(anio: number, mes: number, idSucursal: number) {
         this.limpiarParam();
         this.param.anio = anio;
         this.param.mes = mes;
         this.param.idCliente = this.user.idInterno;
+        this.param.idInmueble = idSucursal;
         this.obtenerSupervisiones(1);
         let docModal = document.getElementById('modalSupervision');
         let myModal = bootstrap.Modal.getOrCreateInstance(docModal);

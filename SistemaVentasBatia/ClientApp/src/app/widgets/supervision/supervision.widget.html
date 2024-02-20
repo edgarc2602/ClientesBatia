@@ -9,17 +9,17 @@
                     <div class="col-md-4 col-sm-10 col-12 text-start">
                         <h4 class="modal-title">Supervisiones</h4>
                     </div>
-                    <div class="col-md-2 col-sm-10 col-12 text-end">
+                    <div class="col-md-4 col-sm-10 col-12 text-end">
                     </div>
-                    <div class="col-md-3 col-6 ">
-                        <div class="form-floating shadow-sm">
-                            <input type="number" class="form-control" [(ngModel)]="param.anio" (change)="obtenerSupervisiones(1)" [disabled]="isLoading" id="anio">
+                    <div class="col-md-2 col-6 ">
+                        <div class="form-floating">
+                            <input type="number" class="form-control custom-input" [(ngModel)]="param.anio"id="anio" disabled>
                             <label for="anio">Año</label>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6 ">
-                        <div class="form-floating shadow-sm">
-                            <select class="form-select" [(ngModel)]="param.mes" (change)="obtenerSupervisiones(1)" [disabled]="isLoading" id="mes">
+                    <div class="col-md-2 col-6 ">
+                        <div class="form-floating">
+                            <select class="form-select custom-input" [(ngModel)]="param.mes" id="mes" disabled>
                                 <option *ngFor="let m of mesesc" [ngValue]="m.id">{{ m.descripcion }}</option>
                             </select>
                             <label for="mes">Mes</label>
@@ -36,7 +36,7 @@
                 <div *ngIf="isLoading" class="text-center ">
                     <i class="fas fa-spinner fa-spin fa-3x"></i>
                 </div>
-                <div *ngIf="model.supervisiones && model.supervisiones.length > 0" class="fade-in-container" style="max-height: 350px; border-radius: 10px; overflow-y:auto; overflow-x:hidden;">
+                <div *ngIf="model.supervisiones && model.supervisiones.length > 0" class="fade-in-container box-shadow" style="max-height: 350px; border-radius: 10px; overflow-y:auto; overflow-x:hidden;">
                     <table class="table table-borderless table-striped table-responsive">
                         <thead class="sticky-top">
                             <tr class="text-start sticky-top d-md-none align-items-center">
@@ -47,15 +47,18 @@
                                 <td>
                                     <div class="row align-items-center" style="font-weight: bold;">
                                         <div class="col-md-1 col-sm-6 col-6">
-                                            <span class="text-white d-none d-md-block">Id</span>
-                                        </div>
-                                        <div class="col-md-3 col-sm-6 col-6">
-                                            <span class="text-white d-none d-md-block">Punto de atención</span>
-                                        </div>
-                                        <div class="col-md-3 col-sm-6 col-6">
-                                            <span class="text-white d-none d-md-block">Supervisor</span>
+                                            <span class="text-white d-none d-md-block text-center">Id</span>
                                         </div>
                                         <div class="col-md-1 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block text-center">Fecha</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Punto de atención</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Supervisor</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
                                             <span class="text-white d-none d-md-block">Entrevista cliente</span>
                                         </div>
                                         <div class="col-md-2 col-sm-6 col-6">
@@ -78,29 +81,33 @@
                             <tr *ngFor="let s of model.supervisiones">
                                 <td>
                                     <div class="row">
-                                        <div class="col-md-1 col-sm-6 col-5">
+                                        <div class="col-md-1 col-sm-6 col-2 text-center">
                                             <span class="badge d-md-none">Id:</span>
-                                            <div class=" ms-2">{{ s.idSupervision }}</div>
+                                            <div>{{ s.idSupervision }}</div>
                                         </div>
-                                        <div class="col-md-3 col-sm-6 col-5">
+                                        <div class="col-md-1 col-sm-6 col-4 text-center">
+                                            <span class="badge d-md-none">Fecha:</span>
+                                            <div>{{ s.fecha | date: 'dd/MM/yyyy' }}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
                                             <span class="badge d-md-none">Punto de atención:</span>
-                                            <div class=" ms-2">{{ s.inmueble }}</div>
+                                            <div>{{ s.inmueble }}</div>
                                         </div>
-                                        <div class="col-md-3 col-sm-6 col-7">
+                                        <div class="col-md-2 col-sm-6 col-6">
                                             <span class="badge d-md-none">Supervisor:</span>
-                                            <div class="ms-2">{{ s.usuario }}</div>
+                                            <div>{{ s.usuario }}</div>
                                         </div>
-                                        <div class="col-md-1 col-sm-6 col-5">
+                                        <div class="col-md-2 col-sm-6 col-6">
                                             <span class="badge d-md-none">Entrevista cliente:</span>
-                                            <div class="ms-2">{{ s.entrevista }}</div>
+                                            <div>{{ s.entrevista }}</div>
                                         </div>
-                                        <div class="col-md-2 col-sm-6 col-7">
+                                        <div class="col-md-2 col-sm-6 col-6">
                                             <span class="badge d-md-none">Nombre:</span>
-                                            <div class="ms-2">{{ s.clienteNombre }}</div>
+                                            <div>{{ s.clienteNombre }}</div>
                                         </div>
-                                        <div class="col-md-2 col-sm-6 col-2">
+                                        <div class="col-md-2 col-sm-6 col-6">
                                             <span class="badge d-md-none">Calif. General:</span>
-                                            <div class="ms-2">{{ s.calificacion }}</div>
+                                            <div>{{ s.calificacion }}</div>
                                         </div>
                                     </div>
                                 </td>

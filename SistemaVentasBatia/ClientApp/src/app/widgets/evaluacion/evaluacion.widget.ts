@@ -30,11 +30,12 @@ export class EvaluacionWidget {
         })
     }
 
-    open(anio: number, mes: number) {
+    open(anio: number, mes: number, idSucursal: number) {
         this.limpiarParam();
         this.param.anio = anio;
         this.param.mes = mes;
         this.param.idCliente = this.user.idInterno;
+        this.param.idInmueble = idSucursal;
         this.obtenerEvaluaciones(1);
         let docModal = document.getElementById('modalEvaluacion');
         let myModal = bootstrap.Modal.getOrCreateInstance(docModal);

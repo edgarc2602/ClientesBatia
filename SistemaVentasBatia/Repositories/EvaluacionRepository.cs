@@ -20,7 +20,7 @@ namespace SistemaClientesBatia.Repositories
     public interface IEvaluacionRepository
     {
         Task<int> ContarEvaluaciones(ParamDashboardDTO param);
-        Task<List<Evaluacion>> ObtenerEvaluaciones(int mes, int anio, int idCliente, int pagina);
+        Task<List<Evaluacion>> ObtenerEvaluaciones(int mes, int anio, int idCliente, int pagina, int IdInmueble);
     }
 
     public class EvaluacionRepository : IEvaluacionRepository
@@ -39,6 +39,7 @@ SELECT
 count(a.id_campania) Rows 
 from tb_encuesta_registro a
 where a.id_status = 1
+and ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
 AND MONTH(a.fecha) = @Mes
 AND YEAR(a.fecha) = @Anio
 AND a.id_cliente = @IdCliente
@@ -56,7 +57,7 @@ AND a.id_cliente = @IdCliente
             return numrows;
         }
 
-        public async Task<List<Evaluacion>> ObtenerEvaluaciones(int mes, int anio, int idCliente, int pagina)
+        public async Task<List<Evaluacion>> ObtenerEvaluaciones(int mes, int anio, int idCliente, int pagina, int IdInmueble)
         {
             string query = @"
 SELECT  *   
@@ -77,6 +78,7 @@ from tb_encuesta_registro a inner join tb_cliente b on a.id_cliente = b.id_clien
 inner join tb_cliente_inmueble c on a.id_inmueble = c.id_inmueble
 inner join tb_encuesta_nombre d on a.id_encuesta = d.id_encuesta
 where a.id_status = 1
+and ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
 AND MONTH(a.fecha) = @Mes
 AND YEAR(a.fecha) = @Anio
 AND a.id_cliente = @IdCliente
@@ -89,7 +91,7 @@ ORDER BY RowNum
             try
             {
                 using var connection = _ctx.CreateConnection();
-                Evaluaciones = (await connection.QueryAsync<Evaluacion>(query, new { mes,anio,idCliente,pagina})).ToList();
+                Evaluaciones = (await connection.QueryAsync<Evaluacion>(query, new { mes,anio,idCliente,pagina,IdInmueble})).ToList();
             }
             catch (Exception ex)
             {

@@ -44,7 +44,7 @@ namespace SistemaClientesBatia.Services
                 {
                     listaSupervision.NumPaginas++;
                 }
-                var lista = await _SupervisionRepo.ObtenerSupervisiones(param.Mes, param.Anio, param.IdCliente, listaSupervision.Pagina);
+                var lista = await _SupervisionRepo.ObtenerSupervisiones(param.Mes, param.Anio, param.IdCliente, listaSupervision.Pagina, param.IdInmueble);
                 listaSupervision.Supervisiones = _mapper.Map<List<SupervisionDTO>>(lista);
             }
             else

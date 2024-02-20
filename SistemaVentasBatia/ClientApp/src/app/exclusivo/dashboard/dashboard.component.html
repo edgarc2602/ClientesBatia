@@ -49,7 +49,7 @@
 
                         </div>
                         <div class="display-6">
-                            %{{ dashboard.asistencia }}
+                            {{ dashboard.asistencia }}%
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                             <i class="fa fa-taxi fa-2x" style="color: aqua;"></i>
                         </div>
                         <div class="display-6">
-                            {{ dashboard.entregas }}
+                            {{ dashboard.entregas }}%
                         </div>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <h5 class="card-title mb-4">Supervisión</h5>
-                        <button type="button" (click)="openSupervisionModal()" class="btn btn-outline-light btn-sm">
+                        <button *ngIf="dashboard.supervision != 0" type="button" (click)="openSupervisionModal()" class="btn btn-outline-light btn-sm">
                             <i class="fa-solid fa-list fa-2x" style="color: purple;"></i>
                         </button>
 
@@ -97,7 +97,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <h5 class="card-title mb-4">Evaluaciones</h5>
-                        <button type="button" (click)="openEvaluacionModal()" class="btn btn-outline-light btn-sm">
+                        <button *ngIf="dashboard.evaluaciones != 0" type="button" (click)="openEvaluacionModal()" class="btn btn-outline-light btn-sm">
                             <i class="fa-solid fa-list fa-2x" style="color: green;"></i>
                         </button>
 
@@ -174,5 +174,5 @@
     </div>
     <br />
 </div>
-<evaluacion-widget (evaEvent)="regresaEva"></evaluacion-widget>
-<supervision-widget (supEvent)="regresaSup"></supervision-widget>
+<evaluacion-widget (evaEvent)="regresaEva()"></evaluacion-widget>
+<supervision-widget (supEvent)="regresaSup()"></supervision-widget>

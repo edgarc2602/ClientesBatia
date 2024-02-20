@@ -17,7 +17,7 @@ namespace SistemaClientesBatia.Repositories
         Task<Usuario> Login(Acceso acceso);
         Task<bool> ConsultarUsuario(int idPersonal, string Nombres);
         Task<decimal> GetAsistenciaInd(ParamDashboardDTO param);
-        Task<int> GetEntregasInd(ParamDashboardDTO param);
+        Task<decimal> GetEntregasInd(ParamDashboardDTO param);
         Task<int> GetSupervisionInd(ParamDashboardDTO param);
         Task<int> GetEvaluacionesInd(ParamDashboardDTO param);
         Task<List<AsistenciaMes>> GetAsistenciaMes(ParamDashboardDTO param);
@@ -80,60 +80,43 @@ FROM personal where per_usuario = @Usuario and per_password = @Contrasena
 
         public async Task<decimal> GetAsistenciaInd(ParamDashboardDTO param)
         {
-            decimal asistencia = 0;
+            decimal cumplimiento = 0;
             string query;
             if (param.IdInmueble == 0)
             {
-                //string storedProcedure = "sp_asistenciacliente";
-                //DynamicParameters parameters = new DynamicParameters();
-                //parameters.Add("@mes", param.Mes);
-                //parameters.Add("@anio", param.Anio);
-                //parameters.Add("@cliente", param.IdCliente);
-                //parameters.Add("@cumplimiento", dbType: DbType.Decimal, direction: ParameterDirection.Output);
-                //try
-                //{
-                //    using (var connection = _ctx.CreateConnection())
-                //    {
-                //        await connection.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
-                //        asistencia = parameters.Get<decimal>("@cumplimiento");
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex.ToString());
-                //    throw;
-                //}
-
-                //return asistencia;
                 query = @"
-;WITH TotalCantidad AS (
-    SELECT SUM(cantidad) AS total 
-    FROM tb_cliente_plantilla a 
-    INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble 
-    WHERE b.id_cliente = @IdCliente
-)
-SELECT 
-    ISNULL(CAST(AVG(calif) AS DECIMAL(8, 2)), 0) AS AsistenciaTotal  
-FROM (
-    SELECT 
-        (COUNT(id_empleado) * 100.0 / (SELECT total FROM TotalCantidad)) AS calif
-    FROM 
-        tb_empleado_asistencia a 
-        INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble 
-    WHERE 
-        b.id_cliente = @IdCliente
-        AND movimiento = 'A' 
-        AND MONTH(fecha) = @Mes 
-        AND YEAR(fecha) = @Anio 
-    GROUP BY 
-        fecha
-) AS tabla1
-";
+DECLARE  @dias as int
+DECLARE @FechaInicio DATETIME = DATEFROMPARTS(@Anio, @Mes, 1);
+DECLARE @UltimoDiaMes DATETIME = EOMONTH(@FechaInicio);
+DECLARE @DiasEnMes INT = DAY(@UltimoDiaMes);
+SET @dias = @DiasEnMes;
+SELECT (
+    CAST((
+        SELECT COUNT(id_empleado)
+        FROM tb_empleado_asistencia a
+        INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+        WHERE b.id_cliente = @IdCliente
+        AND movimiento IN ('A', 'N')
+        AND MONTH(fecha) = @Mes
+        AND YEAR(fecha) = @Anio
+    ) AS decimal(18, 2)) / 
+    CAST((
+        (SELECT SUM(cantidad) 
+        FROM tb_cliente_plantilla a 
+        INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble  
+        WHERE a.id_status = 1   
+        AND b.id_status = 1 
+        AND b.id_cliente = @IdCliente)
+        * @dias
+    ) AS decimal(18, 2)) * 100
+) AS AsistenciaMensual
+                ";
                 try
                 {
                     using (var connection = _ctx.CreateConnection())
                     {
-                        asistencia = await connection.QueryFirstAsync<decimal>(query, param);
+                        cumplimiento = await connection.QueryFirstAsync<decimal>(query, param);
+                        cumplimiento = Math.Round(cumplimiento, 2);
                     }
                 }
                 catch (Exception ex)
@@ -141,28 +124,59 @@ FROM (
                     Console.WriteLine(ex.ToString() + "GetAsistenciaInd");
                     throw ex;
                 }
-                return asistencia;
+                return cumplimiento;
             }
             else
             {
+                //query = @"
+                //select cast(isnull(AVG(calif),0) as numeric(12,2))  as AsistenciaSuc  from( 
+                //select cast((cast(count(id_empleado) as float)/
+                //(Select sum(cantidad) as total from tb_cliente_plantilla a inner join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
+                //A.id_inmueble  = @IdInmueble 
+                //and a.id_status = 1)) *100 as numeric(8,2)) as calif
+                //from tb_empleado_asistencia a inner join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
+                //A.id_inmueble  = @IdInmueble 
+                //AND movimiento = 'A'
+                //and month(fecha) = @Mes
+                //and YEAR (fecha) = @Anio
+                //and id_cliente = @IdCliente
+                //group by fecha) as tabla1
+
                 query = @"
-select cast(isnull(AVG(calif),0) as numeric(12,2))  as AsistenciaSuc  from( 
-select cast((cast(count(id_empleado) as float)/
-(Select sum(cantidad) as total from tb_cliente_plantilla a inner join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
-A.id_inmueble  = @IdInmueble 
-and a.id_status = 1)) *100 as numeric(8,2)) as calif
-from tb_empleado_asistencia a inner join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
-A.id_inmueble  = @IdInmueble 
-AND movimiento = 'A'
-and month(fecha) = @Mes
-and YEAR (fecha) = @Anio 
-group by fecha) as tabla1
+DECLARE  @dias as int
+DECLARE @FechaInicio DATETIME = DATEFROMPARTS(@Anio, @Mes, 1);
+DECLARE @UltimoDiaMes DATETIME = EOMONTH(@FechaInicio);
+DECLARE @DiasEnMes INT = DAY(@UltimoDiaMes);
+SET @dias = @DiasEnMes;
+SELECT (
+    CAST((
+        SELECT COUNT(id_empleado)
+        FROM tb_empleado_asistencia a
+        INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+        WHERE b.id_cliente = @IdCliente
+		AND b.id_inmueble = @IdInmueble
+        AND movimiento IN ('A', 'N')
+        AND MONTH(fecha) = @Mes
+        AND YEAR(fecha) = @Anio
+    ) AS decimal(18, 2)) / 
+    CAST((
+        (SELECT SUM(cantidad) 
+        FROM tb_cliente_plantilla a 
+        INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble  
+        WHERE a.id_status = 1
+		AND b.id_inmueble = @IdInmueble
+        AND b.id_status = 1 
+        AND b.id_cliente = @IdCliente)
+        * @dias
+    ) AS decimal(18, 2)) * 100
+) AS AsistenciaMensual
 ";
                 try
                 {
                     using (var connection = _ctx.CreateConnection())
                     {
-                        asistencia = await connection.QueryFirstAsync<decimal>(query, param);
+                        cumplimiento = await connection.QueryFirstAsync<decimal>(query, param);
+                        cumplimiento = Math.Round(cumplimiento, 2);
                     }
                 }
                 catch (Exception ex)
@@ -170,64 +184,68 @@ group by fecha) as tabla1
                     Console.WriteLine(ex.ToString() + "GetAsistenciaInd");
                     throw ex;
                 }
-                return asistencia;
+                return cumplimiento;
             }
-            
+
         }
 
-        public async Task<int> GetEntregasInd(ParamDashboardDTO param)
+        public async Task<decimal> GetEntregasInd(ParamDashboardDTO param)
         {
-            int entregas = 0;
-            string query;
-            if (param.IdInmueble == 0)
-            {
-                query = @"
-SELECT COUNT(id_listado) as EntregasTotal from tb_listadomaterial where id_cliente = @IdCliente and mes = @Mes and anio = @Anio and id_status != 5;
-";
-            }
-            else
-            {
-                query = @"
-select isnull(count(id),0) as EntregasSuc from tb_entrega_material where 
-id_inmueble = @IdInmueble 
+            int total;
+            int entregado;
+            decimal result;
+            string queryTotal = @"
+SELECT COUNT(id_listado) as total 
+from tb_listadomaterial where 
+id_cliente = @IdCliente 
+and mes = @Mes 
 and anio = @Anio 
-and mes = @Mes
-";
-            }
+and id_status != 5
+and ISNULL(NULLIF(@IdInmueble,0), id_inmueble) = id_inmueble";
+            string queryEntregado = @"
+SELECT COUNT(id_listado) as entregado 
+from tb_listadomaterial where 
+id_cliente = @IdCliente 
+and mes = @Mes 
+and anio = @Anio 
+and id_status = 4
+and ISNULL(NULLIF(@IdInmueble,0), id_inmueble) = id_inmueble";
             try
             {
                 using (var connection = _ctx.CreateConnection())
                 {
-                    entregas = await connection.QueryFirstAsync<int>(query, param);
+                    total = await connection.QueryFirstAsync<int>(queryTotal, param);
+                    entregado = await connection.QueryFirstAsync<int>(queryEntregado, param);
                 }
+                if (total != 0)
+                {
+                    result = ((decimal)entregado / total) * 100;
+                    result = Math.Round(result, 2);
+                }
+                else
+                {
+                    result = 0;
+                }
+                return result;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString() + "GetEntregasInd");
                 throw ex;
             }
-            return entregas;
         }
 
         public async Task<int> GetSupervisionInd(ParamDashboardDTO param)
         {
             int supervision = 0;
-            string query;
-            if (param.IdInmueble == 0)
-            {
-                query = @"
-select count(id_supervision) as SupervisionTotal from tb_supervision where id_cliente = @IdCliente and year(fechaini) = @Anio and month(fechaini) = @Mes
-";
-            }
-            else
-            {
-                query = @"
-select isnull(count(id_supervision),0) as SupervisionSuc from tb_supervision where 
-id_inmueble = @IdInmueble 
+            string query = @"
+select isnull(count(id_supervision),0) as SupervisionSuc 
+from tb_supervision where 
+id_cliente = @IdCliente
+and ISNULL(NULLIF(@IdInmueble,0), id_inmueble) = id_inmueble
 and year(fechaini) = @Anio
 and month(fechaini) = @Mes
 ";
-            }
             try
             {
                 using (var connection = _ctx.CreateConnection())
@@ -247,21 +265,13 @@ and month(fechaini) = @Mes
         {
             int evaluaciones = 0;
             string query;
-            if (param.IdInmueble == 0)
-            {
-                query = @"
-select count(id_campania) as EvaluacionTotal from tb_encuesta_registro where id_cliente = @IdCliente and year(fecha) = @Anio and month(fecha) = @Mes
+            query = @"
+select count(id_campania) as EvaluacionTotal from tb_encuesta_registro where 
+id_cliente = @IdCliente
+and ISNULL(NULLIF(@IdInmueble,0), id_inmueble) = id_inmueble
+and year(fecha) = @Anio 
+and month(fecha) = @Mes
 ";
-            }
-            else
-            {
-                query = @"
-select count(id_campania) as EvaluacionesSuc from tb_encuesta_registro where 
-id_inmueble =@IdInmueble and 
-year(fecha) = @Anio and 
-month(fecha) = @Mes
-";
-            }
             try
             {
                 using (var connection = _ctx.CreateConnection())
@@ -280,30 +290,16 @@ month(fecha) = @Mes
         public async Task<List<AsistenciaMes>> GetAsistenciaMes(ParamDashboardDTO param)
         {
             var asistenciaMes = new List<AsistenciaMes>();
-            string query;
-            if (param.IdInmueble == 0)
-            {
-                query = @"
+             string query = @"
 select day(fecha) as Fecha, count(movimiento) as Asistencia
 From tb_empleado_asistencia a inner Join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
 month(fecha) = @Mes 
-and YEAR (fecha) = @Anio 
-and b.id_cliente  = @IdCliente  
+and YEAR (fecha) = @Anio
+and ISNULL(NULLIF(@IdCliente ,0), b.id_cliente) = b.id_cliente
+and ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble 
 AND movimiento = 'A'
-Group By fecha Order By fecha
+Group By DAY(fecha) Order By fecha
 ";
-            }
-            else
-            {
-                query = @"
-select day(fecha) as Fecha, count(movimiento) as Asistencia from tb_empleado_asistencia where 
-month(fecha) =@Mes 
-and YEAR (fecha) = @Anio 
-and id_inmueble = @IdInmueble 
-AND movimiento = 'A' 
-group by fecha order by fecha
-";
-            }
             try
             {
                 using (var connection = _ctx.CreateConnection())
@@ -323,29 +319,25 @@ group by fecha order by fecha
         public async Task<List<Incidencia>> GetIncidencia(ParamDashboardDTO param)
         {
             var incidencias = new List<Incidencia>();
-            string query;
-            if (param.IdInmueble == 0)
-            {
-                query = @"
-select case when movimiento = 'A' then 'Asistencia' when movimiento ='F' then 'Falta' else  'Otro' end as Movimiento,
-count(movimiento) as Total from tb_empleado_asistencia a inner join tb_cliente_inmueble  b on a.id_inmueble = b.id_inmueble where 
+            string query = @"
+select case 
+when movimiento = 'A' then 'Asistencia'
+when movimiento = 'D' then 'Doblete' 
+when movimiento = 'F' then 'Falta'
+when movimiento = 'FJ' then 'Falta Justificada'
+when movimiento = 'IEG' then 'Incapacdad enfermedad general' 
+when movimiento = 'IRT' then 'Incapacidad riesgo trabajo' 
+when movimiento = 'N' then 'Descanso' 
+when movimiento = 'V' then 'Vacaciones' 
+else  'Otro' end as Movimiento,
+count(movimiento) as Total from tb_empleado_asistencia a 
+inner join tb_cliente_inmueble  b on a.id_inmueble = b.id_inmueble where 
 b.id_cliente = @IdCliente  
+and ISNULL(NULLIF(@IdInmueble,0), b.id_inmueble) = b.id_inmueble
 and month(fecha) = @Mes 
 and YEAR (fecha) = @Anio  
 group by movimiento
 ";
-            }
-            else
-            {
-                query = @"
-select case when movimiento = 'A' then 'Asistencia' when movimiento ='F' then 'Falta' else  'Otro' end as Movimiento,
-count(movimiento) as Total from tb_empleado_asistencia a inner join tb_cliente_inmueble  b on a.id_inmueble = b.id_inmueble where 
-a.id_inmueble = @IdInmueble 
-and month(fecha) = @Mes 
-and YEAR (fecha) = @Anio 
-group by movimiento
-";
-            }
             try
             {
                 using (var connection = _ctx.CreateConnection())

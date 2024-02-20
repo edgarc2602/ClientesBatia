@@ -26,6 +26,7 @@ export class TicketComponent {
     }
     @ViewChild(GeneraTicketWidget, { static: false }) GenTick: GeneraTicketWidget;
     @ViewChild(ConfirmaWidget, { static: false }) confirma: ConfirmaWidget;
+    isLoading: boolean = false;
 
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser) {
         http.get<Catalogo[]>(`${url}api/catalogo/GetPrioridadTK`).subscribe(response => {
@@ -48,9 +49,18 @@ export class TicketComponent {
     }
 
     obtenerTickets($event) {
+        this.isLoading = true;
+        this.model.tickets = [];
         this.http.get<ListaTicket>(`${this.url}api/Ticket/ObtenerListaTickets/${this.prioridadsl}/${this.categoriasl}/${this.statussl}/${this.user.idInterno}/${this.model.pagina}`).subscribe(response => {
-            this.model = response;
-        })
+            setTimeout(() => {
+                this.model = response;
+                this.isLoading = false;
+            }, 300);
+        }, err => {
+            setTimeout(() => {
+                this.isLoading = false;
+            }, 300);
+        });
     }
 
     cerrarTicket($event) {

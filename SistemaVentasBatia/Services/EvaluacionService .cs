@@ -40,7 +40,7 @@ namespace SistemaClientesBatia.Services
                 {
                     listaEvaluacion.NumPaginas++;
                 }
-                var lista = await _EvaluacionRepo.ObtenerEvaluaciones(param.Mes, param.Anio, param.IdCliente, listaEvaluacion.Pagina);
+                var lista = await _EvaluacionRepo.ObtenerEvaluaciones(param.Mes, param.Anio, param.IdCliente, listaEvaluacion.Pagina, param.IdInmueble);
                 listaEvaluacion.Evaluaciones = _mapper.Map<List<EvaluacionDTO>>(lista);
             }
             else
