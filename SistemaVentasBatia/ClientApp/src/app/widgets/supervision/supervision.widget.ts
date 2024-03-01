@@ -6,7 +6,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ListaSupervision } from '../../models/listasupervision';
 import { ParamDashboard } from '../../models/paramdashboard';
 import { Catalogo } from 'src/app/models/catalogo';
-
 declare var bootstrap: any;
 
 @Component({

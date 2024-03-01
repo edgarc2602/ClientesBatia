@@ -6,7 +6,6 @@ import { StoreUser } from 'src/app/stores/StoreUser';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ListaEvaluacion } from 'src/app/models/listaevaluacion';
 import { ParamDashboard } from '../../models/paramdashboard';
-
 declare var bootstrap: any;
 
 @Component({
@@ -87,6 +86,7 @@ export class EvaluacionWidget {
             elemento.blur();
         });
     }
+
     muevePagina(event) {
         this.model.pagina = event;
         this.obtenerEvaluaciones(0);

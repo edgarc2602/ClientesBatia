@@ -62,6 +62,7 @@ export class PaginaWidget implements OnChanges {
         }
         this.quitarFocoDeElementos();
     }
+
     quitarFocoDeElementos(): void {
         const elementos = document.querySelectorAll('button, input[type="text"]');
         elementos.forEach((elemento: HTMLElement) => {

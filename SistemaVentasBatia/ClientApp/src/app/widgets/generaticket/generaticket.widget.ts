@@ -5,9 +5,6 @@ import { Ticket } from 'src/app/models/ticket';
 import Swal from 'sweetalert2';
 import { StoreUser } from 'src/app/stores/StoreUser';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
-
-
 declare var bootstrap: any;
 
 @Component({
@@ -24,7 +21,6 @@ export class GeneraTicketWidget {
     miFormulario: FormGroup;
 
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser, private fb: FormBuilder) {
-
         this.miFormulario = this.fb.group({
             nombref: ['', Validators.required],
             emailf: ['', [Validators.required, Validators.email]],
@@ -55,6 +51,7 @@ export class GeneraTicketWidget {
         this.sendEvent.emit(true);
         this.close();
     }
+
     limpiarForm() {
         this.miFormulario.reset({
             nombref: '',
@@ -64,6 +61,7 @@ export class GeneraTicketWidget {
             categoriaf: ''
         });
     }
+
     obtenerValoresForm() {
         const formValues = this.miFormulario.getRawValue();
         this.model.idCliente = this.user.idInterno;

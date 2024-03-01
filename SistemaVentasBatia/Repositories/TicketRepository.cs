@@ -74,6 +74,7 @@ GETDATE(),
             }
             return result;
         }
+
         public async Task<int> ContarTickets(int idPrioridad, int idCategoria, int idStatus, int idCliente)
         {
             string query = @"
@@ -97,6 +98,7 @@ ISNULL(NULLIF(@idStatus,0), id_status) = id_status
             }
             return numrows;
         }
+
         public async Task<List<Ticket>> ObtenerTickets(int pagina, int idPrioridad, int idCategoria, int idStatus, int idCliente)
         {
             string query = @"
@@ -138,6 +140,7 @@ ORDER BY RowNum
             }
             return tickets;
         }
+
         public async Task<bool> CerrarTicket(int idClienteTicket, int idCliente)
         {
             string query = @"

@@ -18,24 +18,6 @@
                 </div>
             </a>
         </li>
-        <!--<li class="nav-item mb-3 text-sm-start text-md-center">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" [routerLink]="['/exclusivo/factura']" [routerLinkActive]='["active"]' aria-current="page">
-                <div data-bs-toggle="tooltip" data-bs-placement="right">
-                    <span> <i class="fa-solid fa-file-invoice-dollar fa-2x"></i></span>
-                    <div class=" d-block d-md-none"><h6>FACTURAS</h6></div>
-                    <hr class="d-block d-md-none" />
-                </div>
-            </a>
-        </li>
-        <li class="nav-item mb-3 text-sm-start text-md-center">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" [routerLink]="['/exclusivo/estadodecuenta']" [routerLinkActive]='["active"]' aria-current="page">
-                <div data-bs-toggle="tooltip" data-bs-placement="right">
-                    <span> <i class="fa-solid fa-file-invoice fa-2x"></i></span>
-                    <div class=" d-block d-md-none"><h6>CUENTA</h6></div>
-                    <hr class="d-block d-md-none" />
-                </div>
-            </a>
-        </li>-->
         <li class="nav-item mb-3 text-sm-start text-md-center">
             <a *ngIf="isDarkTheme" class="nav-link"  data-bs-toggle="collapse"  data-bs-target="#sidebarMenu" (click)="toggleTheme()">
                 <div data-bs-toggle="tooltip" data-bs-placement="right">
@@ -54,17 +36,8 @@
                 </div>
             </a>
         </li>
-        <!--<li class="nav-item mb-3 text-sm-start text-md-center text-center align-items-center">
-            <div *ngIf="isDarkTheme" data-bs-toggle="tooltip" data-bs-placement="right" title="Cambiar tema">
-                <button class="btn" (click)="toggleTheme()"><i class="fa-solid fa-sun fa-2x " style="color: white;"></i></button>
-            </div>
-            <div *ngIf="!isDarkTheme" data-bs-toggle="tooltip" data-bs-placement="right" title="Cambiar tema">
-                <button class="btn" (click)="toggleTheme()"><i class="fa-solid fa-moon fa-2x" style="color: #333333;"></i></button>
-            </div>
-        </li>-->
     </ul>
 </nav>
-
 
 <!--MENU ESTATICO-->
 <nav id="sidebarMenustatic" class="col-md-auto d-none d-md-block sidebar collapse">
@@ -87,24 +60,6 @@
                 </div>
             </a>
         </li>
-        <!--<li class="nav-item mb-3 text-sm-start text-md-center">
-            <a class="nav-link" [routerLink]="['/exclusivo/factura']" [routerLinkActive]='["active"]' aria-current="page">
-                <div data-bs-toggle="tooltip" data-bs-placement="right" title="Facturas">
-                    <span> <i class="fa-solid fa-file-invoice-dollar fa-2x"></i></span>
-                    <div class="float-end d-block d-sm-none"><h6>FACTURAS</h6></div>
-                    <hr class="d-block d-sm-none" />
-                </div>
-            </a>
-        </li>
-        <li class="nav-item mb-3 text-sm-start text-md-center">
-            <a class="nav-link" [routerLink]="['/exclusivo/estadodecuenta']" [routerLinkActive]='["active"]' aria-current="page">
-                <div data-bs-toggle="tooltip" data-bs-placement="right" title="Estado de cuenta">
-                    <span> <i class="fa-solid fa-file-invoice fa-2x"></i></span>
-                    <div class="float-end d-block d-sm-none"><h6>ESTADO DE CUENTA</h6></div>
-                    <hr class="d-block d-sm-none" />
-                </div>
-            </a>
-        </li>-->
         <li class="nav-item mb-3 text-sm-start text-md-center">
             <div *ngIf="isDarkTheme" data-bs-toggle="tooltip" data-bs-placement="right" title="Tema claro">
                 <button class="btn" (click)="toggleTheme()"><i class="fa-solid fa-sun fa-2x " style="color: #fff;"></i></button>

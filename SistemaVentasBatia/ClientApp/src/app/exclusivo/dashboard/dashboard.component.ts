@@ -12,7 +12,6 @@ import { EvaluacionWidget } from '../../widgets/evaluacion/evaluacion.widget'
 import { SupervisionWidget } from '../../widgets/supervision/supervision.widget'
 import accessibility from 'highcharts/modules/accessibility';
 
-
 @Component({
     selector: 'dashboard-comp',
     templateUrl: './dashboard.component.html',
@@ -32,13 +31,13 @@ export class DashboardComponent implements OnInit {
     @ViewChild(EvaluacionWidget, { static: false }) EvaWid: EvaluacionWidget;
     @ViewChild(SupervisionWidget, { static: false }) SupWid: SupervisionWidget;
     
-
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser) {
         http.get<Catalogo[]>(`${url}api/catalogo/obtenermeses`).subscribe(response => {
             this.mesesc = response;
         })
         
     }
+
     openSupervisionModal() {
         this.SupWid.open(this.param.anio, this.param.mes, this.idSucursal);
     }
@@ -144,7 +143,7 @@ export class DashboardComponent implements OnInit {
             },
             title: {
 
-                text: 'Asistencia mensual ' + sucursaln
+                text: null/*'Asistencia mensual'*/
             },
             subtitle: {
                 text: totalSubtitle,
@@ -165,9 +164,7 @@ export class DashboardComponent implements OnInit {
             yAxis: {
                 allowDecimals: false,
                 min: 0,
-                title: {
-                    text: 'Asistencia'
-                }
+                title: null
             },
             tooltip: {
                 headerFormat: '<span style="font-size:10px">Dia:{point.key}</span><table>',
@@ -206,7 +203,7 @@ export class DashboardComponent implements OnInit {
                 type: 'pie'
             },
             title: {
-                text: `Incidencias`
+                text: null /*`Incidencias`*/
             },
             //subtitle: {
             //    text: totalSubtitle,
@@ -247,6 +244,7 @@ export class DashboardComponent implements OnInit {
     regresaEva() {
 
     }
+
     regresaSup() {
 
     }

@@ -14,12 +14,7 @@ namespace SistemaClientesBatia.Services
 {
     public interface ISupervisionService
     {
-        //Task<ListadoEstadoDeCuentaDTO> GetEstadoDeCuenta(ListadoEstadoDeCuentaDTO estadodecuenta, int idProveedor);
-        //Task<bool> GuardarSupervision(SupervisionDTO SupervisionM);
-        //Task ObtenerListaSupervisions(ListaSupervisionDTO listaSupervision, int idCliente);
-        //Task<bool> CerrarSupervision(int idClienteSupervision, int idCliente);
         Task<ListaSupervisionDTO> GetListaSupervision(ParamDashboardDTO param, ListaSupervisionDTO listaSupervision);
-
     }
 
     public class SupervisionService : ISupervisionService

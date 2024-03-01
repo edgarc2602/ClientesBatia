@@ -15,7 +15,6 @@ namespace SistemaClientesBatia.Services
     public interface IEvaluacionService
     {
         Task<ListaEvaluacionDTO> GetListaEvaluacion(ParamDashboardDTO param, ListaEvaluacionDTO listaEvaluacion);
-
     }
 
     public class EvaluacionService : IEvaluacionService

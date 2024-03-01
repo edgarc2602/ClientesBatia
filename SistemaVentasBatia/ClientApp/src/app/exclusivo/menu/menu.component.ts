@@ -23,17 +23,19 @@ export class ExMenuComponent {
         this.rtr.navigate(['']);
     }
 
-  collapse() {
-    this.isExpanded = false;
-  }
+    collapse() {
+        this.isExpanded = false;
+    }
 
     toggle() {
-            this.isExpanded = !this.isExpanded;
+        this.isExpanded = !this.isExpanded;
     }
+
     button() {
         this.visibilidadLatMenu = 0;
         this.quitarFocoDeElementos();
     }
+
     quitarFocoDeElementos(): void {
         const elementos = document.querySelectorAll('button, input[type="text"]');
         elementos.forEach((elemento: HTMLElement) => {

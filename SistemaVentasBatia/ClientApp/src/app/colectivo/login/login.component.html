@@ -1,6 +1,5 @@
 <div [@fadeInOut]>
     <body class="bodycss">
-
         <br />
         <div class="row">
             <div class="col-mid">
@@ -25,7 +24,11 @@
                         </div>
                     </div>
                     <div class=" text-start card-footercss">
-                        <button type="button" (click)="onLogin()" class="btn btn-primary box-shadow" isDefault="true">Entrar</button>
+                        <button type="button" (click)="onLogin()" class="btn btn-primary box-shadow" isDefault="true">
+                            Ingresar
+                            <i *ngIf="isLoading" class="fas fa-spinner fa-spin fa-1x"></i>
+                            <i *ngIf="isLoading == false" class="fa-solid fa-right-to-bracket"></i>
+                        </button>
                     </div>
                 </div>
             </div>

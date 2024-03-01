@@ -46,6 +46,7 @@ namespace SistemaClientesBatia.Controllers
                 return StatusCode(500, "Error al obtener el archivo PDF");
             }
         }
+
         [HttpGet("[action]/{idListado}")]
         public IActionResult DescargarReporteListadoMaterial(int idListado = 0)
         {

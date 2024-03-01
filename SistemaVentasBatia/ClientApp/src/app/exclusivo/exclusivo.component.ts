@@ -6,7 +6,6 @@ import { StoreUser } from 'src/app/stores/StoreUser';
     templateUrl: './exclusivo.component.html'
 })
 export class ExclusivoComponent {
-
     constructor(public user: StoreUser) {
         let uST = eval('(' + localStorage.getItem('singaUser') + ')');
         if (uST != undefined) {
@@ -20,10 +19,12 @@ export class ExclusivoComponent {
             this.user.idProveedor = uST.idProveedor;
         }
     }
+
     goBack() {
         window.history.back();
         this.quitarFocoDeElementos();
     }
+
     quitarFocoDeElementos(): void {
         const elementos = document.querySelectorAll('button, input[type="text"]');
 

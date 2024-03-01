@@ -5,6 +5,8 @@
     <br />
     <div class="col-12 mt-1 " style="position: relative;">
         <h1 class="h2" style="position: absolute; top: 0; left: 0; z-index: 1;">Dashboard</h1>
+        <h1 *ngIf="sucursaln == 'Total'" class="h5" style="position: absolute; top: 55px; left: 0; z-index: 1;">{{ sucursaln }}</h1>
+        <h1 *ngIf="sucursaln != 'Total'" class="h5" style="position: absolute; top: 55px; left: 0; z-index: 1;">Sucursal: {{ sucursaln }}</h1>
     </div>
     <div class="sticky-container align-content-center align-middle">
         <div class="d-block d-md-none row pb-5">
@@ -46,7 +48,6 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <i class="fa fa-calendar fa-2x" style="color: orangered;"></i>
-
                         </div>
                         <div class="display-6">
                             {{ dashboard.asistencia }}%
@@ -78,7 +79,6 @@
                         <button *ngIf="dashboard.supervision != 0" type="button" (click)="openSupervisionModal()" class="btn btn-outline-light btn-sm">
                             <i class="fa-solid fa-list fa-2x" style="color: purple;"></i>
                         </button>
-
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
@@ -100,7 +100,6 @@
                         <button *ngIf="dashboard.evaluaciones != 0" type="button" (click)="openEvaluacionModal()" class="btn btn-outline-light btn-sm">
                             <i class="fa-solid fa-list fa-2x" style="color: green;"></i>
                         </button>
-
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
@@ -160,12 +159,14 @@
             </div>
             <div class="col-md-5 shadow-sm mb-3">
                 <div class="card text-center">
+                    <div class="chart-title">Asistencia mensual</div>
                     <div id="GAM" style="height:300px;">
                     </div>
                 </div>
             </div>
             <div class="col-md-3 shadow-sm mb-3">
                 <div class="card text-center">
+                    <div class="chart-title">Incidencias</div>
                     <div id="GIM" style="height:300px;">
                     </div>
                 </div>

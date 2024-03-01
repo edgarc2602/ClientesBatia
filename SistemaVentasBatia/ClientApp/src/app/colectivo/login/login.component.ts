@@ -11,7 +11,6 @@ import { fadeInOut } from 'src/app/fade-in-out';
     selector: 'login-comp',
     templateUrl: './login.component.html',
     animations: [fadeInOut],
-    styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
     model: Acceso = { usuario: '', contrasena: '' };
@@ -20,18 +19,26 @@ export class LoginComponent {
     evenSub: Subject<void> = new Subject<void>();
     isErr: boolean = false;
     errMessage: string = '';
+    isLoading: boolean = false;
 
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, private rtr: Router) {}
 
     onLogin() {
+        this.isLoading = true;
         this.lerr = {};
         if (this.valida()) {
             this.http.post<Usuario>(`${this.url}api/usuario/login`, this.model).subscribe(response => {
-                console.log(response);
-                this.usu = response;
-                localStorage.setItem('singaUser', JSON.stringify(this.usu));
-                this.rtr.navigate(['/exclusivo']);
+                setTimeout(() => {
+                    this.isLoading = false;
+                    console.log(response);
+                    this.usu = response;
+                    localStorage.setItem('singaUser', JSON.stringify(this.usu));
+                    this.rtr.navigate(['/exclusivo']);
+                }, 500);
+
+
             }, err => {
+                this.isLoading = false;
                 console.log(err);
                 if (err.error) {
                     if (err.error.errors) {

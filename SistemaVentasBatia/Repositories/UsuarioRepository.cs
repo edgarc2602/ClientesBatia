@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
@@ -82,9 +83,87 @@ FROM personal where per_usuario = @Usuario and per_password = @Contrasena
         {
             decimal cumplimiento = 0;
             string query;
-            if (param.IdInmueble == 0)
+            DateTime fechaActual = DateTime.Now;
+
+            if (fechaActual.Year == param.Anio && fechaActual.Month == param.Mes)
             {
-                query = @"
+                int Dias = fechaActual.Day;
+                int IdCliente = param.IdCliente;
+                int Mes = param.Mes;
+                int Anio = param.Anio;
+                int IdInmueble = param.IdInmueble;
+                if (param.IdInmueble == 0)
+                {
+                    query = @"
+                    SELECT (
+                        CAST((
+                            SELECT COUNT(id_empleado)
+                            FROM tb_empleado_asistencia a
+                            INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+                            WHERE b.id_cliente = @IdCliente
+                            AND movimiento IN ('A', 'N')
+                            AND MONTH(fecha) = @Mes
+                            AND YEAR(fecha) = @Anio
+                        ) AS decimal(18, 2)) / 
+                        CAST((
+                            (SELECT SUM(cantidad) 
+                            FROM tb_cliente_plantilla a 
+                            INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble  
+                            WHERE a.id_status = 1   
+                            AND b.id_status = 1 
+                            AND b.id_cliente = @IdCliente)
+                            * @dias
+                        ) AS decimal(18, 2)) * 100
+                    ) AS AsistenciaMensual
+                    ";
+                }
+                else
+                {
+                    query = @"
+                        SELECT (
+                            CAST((
+                                SELECT COUNT(id_empleado)
+                                FROM tb_empleado_asistencia a
+                                INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+                                WHERE b.id_cliente = @IdCliente
+		                        AND b.id_inmueble = @IdInmueble
+                                AND movimiento IN ('A', 'N')
+                                AND MONTH(fecha) = @Mes
+                                AND YEAR(fecha) = @Anio
+                            ) AS decimal(18, 2)) / 
+                            CAST((
+                                (SELECT SUM(cantidad) 
+                                FROM tb_cliente_plantilla a 
+                                INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble  
+                                WHERE a.id_status = 1
+		                        AND b.id_inmueble = @IdInmueble
+                                AND b.id_status = 1 
+                                AND b.id_cliente = @IdCliente)
+                                * @dias
+                            ) AS decimal(18, 2)) * 100
+                        ) AS AsistenciaMensual
+                    ";
+                }
+                try
+                {
+                    using (var connection = _ctx.CreateConnection())
+                    {
+                        cumplimiento = await connection.QueryFirstAsync<decimal>(query, new { IdCliente, Mes, Anio, Dias, IdInmueble });
+                        cumplimiento = Math.Round(cumplimiento, 2);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString() + "GetAsistenciaInd");
+                    throw ex;
+                }
+                return cumplimiento;
+            }
+            else
+            {
+                if (param.IdInmueble == 0)
+                {
+                    query = @"
 DECLARE  @dias as int
 DECLARE @FechaInicio DATETIME = DATEFROMPARTS(@Anio, @Mes, 1);
 DECLARE @UltimoDiaMes DATETIME = EOMONTH(@FechaInicio);
@@ -111,38 +190,10 @@ SELECT (
     ) AS decimal(18, 2)) * 100
 ) AS AsistenciaMensual
                 ";
-                try
-                {
-                    using (var connection = _ctx.CreateConnection())
-                    {
-                        cumplimiento = await connection.QueryFirstAsync<decimal>(query, param);
-                        cumplimiento = Math.Round(cumplimiento, 2);
-                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine(ex.ToString() + "GetAsistenciaInd");
-                    throw ex;
-                }
-                return cumplimiento;
-            }
-            else
-            {
-                //query = @"
-                //select cast(isnull(AVG(calif),0) as numeric(12,2))  as AsistenciaSuc  from( 
-                //select cast((cast(count(id_empleado) as float)/
-                //(Select sum(cantidad) as total from tb_cliente_plantilla a inner join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
-                //A.id_inmueble  = @IdInmueble 
-                //and a.id_status = 1)) *100 as numeric(8,2)) as calif
-                //from tb_empleado_asistencia a inner join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
-                //A.id_inmueble  = @IdInmueble 
-                //AND movimiento = 'A'
-                //and month(fecha) = @Mes
-                //and YEAR (fecha) = @Anio
-                //and id_cliente = @IdCliente
-                //group by fecha) as tabla1
-
-                query = @"
+                    query = @"
 DECLARE  @dias as int
 DECLARE @FechaInicio DATETIME = DATEFROMPARTS(@Anio, @Mes, 1);
 DECLARE @UltimoDiaMes DATETIME = EOMONTH(@FechaInicio);
@@ -171,6 +222,7 @@ SELECT (
     ) AS decimal(18, 2)) * 100
 ) AS AsistenciaMensual
 ";
+                }
                 try
                 {
                     using (var connection = _ctx.CreateConnection())
@@ -186,7 +238,6 @@ SELECT (
                 }
                 return cumplimiento;
             }
-
         }
 
         public async Task<decimal> GetEntregasInd(ParamDashboardDTO param)
@@ -290,7 +341,7 @@ and month(fecha) = @Mes
         public async Task<List<AsistenciaMes>> GetAsistenciaMes(ParamDashboardDTO param)
         {
             var asistenciaMes = new List<AsistenciaMes>();
-             string query = @"
+            string query = @"
 select day(fecha) as Fecha, count(movimiento) as Asistencia
 From tb_empleado_asistencia a inner Join tb_cliente_inmueble b on a.id_inmueble = b.id_inmueble where 
 month(fecha) = @Mes 
