@@ -140,7 +140,7 @@
         </div>
     </div>
     <br />
-    <div *ngIf="model.tickets && model.tickets.length > 0">
+    <div *ngIf="model.tickets && model.tickets.length > 0" class="fade-in-container">
         <pagina-widget [pagina]="model.pagina" [numPaginas]="model.numPaginas" [rows]="model.rows" (chgEvent)="muevePagina($event)"></pagina-widget>
     </div>
 </div>

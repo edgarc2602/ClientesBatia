@@ -126,7 +126,8 @@ html {
 -------------------------------------------------- */
 .navbar {
     transition: background-color 0.3s ease,color 0.3s ease,border-color 0.3s ease;
-    background-color: #f8f9fa;
+    background-color: rgba(248, 249, 250, 0.8);
+    backdrop-filter: blur(8px);
 }
 
 .form-control-dark {
@@ -263,6 +264,13 @@ tbody tr:hover {
 .sticky-container {
     position: sticky;
     top: 0;
+    background-color: transparent;
+    z-index: 102;
+}
+
+.sticky-container-dash {
+    position: sticky;
+    top: 65px;
     background-color: transparent;
     z-index: 100;
 }
