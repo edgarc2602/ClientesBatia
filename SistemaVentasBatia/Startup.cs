@@ -65,6 +65,7 @@ namespace SistemaClientesBatia
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<ISupervisionService, SupervisionService>();
             services.AddScoped<IEvaluacionService, EvaluacionService>();
+            services.AddScoped<IEntregaService, EntregaService>();
 
             // Repositories
             services.AddScoped<ICatalogosRepository, CatalogosRepository>();
@@ -72,6 +73,7 @@ namespace SistemaClientesBatia
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<ISupervisionRepository, SupervisionRepository>();
             services.AddScoped<IEvaluacionRepository, EvaluacionRepository>();
+            services.AddScoped<IEntregaRepository, EntregaRepository>();
 
 
         }

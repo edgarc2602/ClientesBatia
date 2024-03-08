@@ -23,9 +23,9 @@ import { TicketComponent } from '../app/exclusivo/ticket/ticket.component';
 import { GeneraTicketWidget } from './widgets/generaticket/generaticket.widget';
 import { ConfirmaWidget } from './widgets/confirma/confirma.widget';
 import { ReactiveFormsModule } from '@angular/forms';
-import { EvaluacionWidget } from './widgets/evaluacion/evaluacion.widget'
-import { SupervisionWidget } from './widgets/supervision/supervision.widget'
-
+import { EvaluacionWidget } from './widgets/evaluacion/evaluacion.widget';
+import { SupervisionWidget } from './widgets/supervision/supervision.widget';
+import { EntregaWidget } from './widgets/entrega/entrega.widget';
  
 
 @NgModule({
@@ -46,7 +46,8 @@ import { SupervisionWidget } from './widgets/supervision/supervision.widget'
         GeneraTicketWidget,
         ConfirmaWidget,
         EvaluacionWidget,
-        SupervisionWidget
+        SupervisionWidget,
+        EntregaWidget
         
     ],
     imports: [

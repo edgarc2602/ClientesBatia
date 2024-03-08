@@ -11,6 +11,7 @@ import { Sucursales } from '../../models/sucursales';
 import { EvaluacionWidget } from '../../widgets/evaluacion/evaluacion.widget'
 import { SupervisionWidget } from '../../widgets/supervision/supervision.widget'
 import accessibility from 'highcharts/modules/accessibility';
+import { EntregaWidget } from '../../widgets/entrega/entrega.widget';
 
 @Component({
     selector: 'dashboard-comp',
@@ -30,6 +31,7 @@ export class DashboardComponent implements OnInit {
     sucursales: Sucursales[];
     @ViewChild(EvaluacionWidget, { static: false }) EvaWid: EvaluacionWidget;
     @ViewChild(SupervisionWidget, { static: false }) SupWid: SupervisionWidget;
+    @ViewChild(EntregaWidget, { static: false }) EntWid: EntregaWidget;
     
     constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser) {
         http.get<Catalogo[]>(`${url}api/catalogo/obtenermeses`).subscribe(response => {
@@ -44,6 +46,11 @@ export class DashboardComponent implements OnInit {
 
     openEvaluacionModal() {
         this.EvaWid.open(this.param.anio, this.param.mes, this.idSucursal);
+    }
+
+    openEntregaModal() {
+        this.EntWid.open(this.param.anio, this.param.mes, this.idSucursal);
+
     }
 
     ngOnInit(): void {

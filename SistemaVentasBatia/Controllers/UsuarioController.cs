@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SistemaClientesBatia.DTOs;
 using SistemaClientesBatia.Models;
 using SistemaClientesBatia.Services;
+using SistemaProveedoresBatia.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,5 +37,9 @@ namespace SistemaClientesBatia.Controllers
         {
             return await _logic.GetSucursales(idCliente);
         }
+
+
+
+        
     }
 }

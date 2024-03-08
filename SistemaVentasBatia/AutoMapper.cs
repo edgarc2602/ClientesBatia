@@ -2,6 +2,7 @@
 using SistemaClientesBatia.Models;
 using SistemaClientesBatia.DTOs;
 using SistemaClientesBatia.Enums;
+using SistemaProveedoresBatia.DTOs;
 
 namespace SistemaClientesBatia
 {
@@ -27,6 +28,8 @@ namespace SistemaClientesBatia
             CreateMap<EvaluacionDTO,Evaluacion>();
             CreateMap<Supervision,SupervisionDTO>();
             CreateMap<SupervisionDTO,Supervision>();
+            CreateMap<Listados,ListadosDTO>();
+            CreateMap<ListadosDTO,Listados>();
         }
     }
 }

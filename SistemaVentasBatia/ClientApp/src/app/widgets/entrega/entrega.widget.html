@@ -1,0 +1,145 @@
+<meta charset="UTF-8">
+<div class="modal fade modal-xl" id="modalEntrega" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <meta charset="UTF-8">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <div class="row col-12 align-items-center ">
+                    <div class="col-md-4 col-sm-10 col-12 text-start">
+                        <h4 class="modal-title">Entregas</h4>
+                    </div>
+                    <div class="col-md-2 col-sm-10 col-12 text-end">
+                        
+                    </div>
+                    <div class="col-md-2 col-12 ">
+                        <div class="form-floating">
+                            <select class="form-select" [(ngModel)]="idStatus" id="ddlStatusListado" (change)="obtenerEntregas(0)" >
+                                <option value="0">Seleccione...</option>
+                                <option value="2">Aprobado</option>
+                                <option value="4">Entregado</option>
+                            </select>
+                            <label for="ddlStatusListado">Estatus</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 ">
+                        <div class="form-floating">
+                            <input type="number" class="form-control custom-input" [(ngModel)]="param.anio" id="anioSup" disabled>
+                            <label for="anioSup">Año</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 ">
+                        <div class="form-floating">
+                            <select class="form-select custom-input" [(ngModel)]="param.mes" id="mesSup" disabled>
+                                <option *ngFor="let m of mesesc" [ngValue]="m.id">{{ m.descripcion }}</option>
+                            </select>
+                            <label for="mesSup">Mes</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div *ngIf="isLoading || (model.listas && model.listas.length === 0)" class="row-12 text-center">
+                    <h6 *ngIf="isLoading">Cargando...</h6>
+                    <h6 *ngIf="!isLoading && model.listas && model.listas.length === 0">No se encontraron registros</h6>
+                </div>
+                <div *ngIf="isLoading" class="text-center ">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                </div>
+                <div *ngIf="model.listas && model.listas.length > 0" class="fade-in-container box-shadow" style="max-height: 350px; border-radius: 10px; overflow-y:auto; overflow-x:hidden;">
+                    <table class="table table-borderless table-striped table-responsive">
+                        <thead class="sticky-top">
+                            <tr class="text-start sticky-top d-md-none align-items-center">
+                                <th>Entregas</th>
+                                <!--<th></th>-->
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="row align-items-center" style="font-weight: bold;">
+                                        <div class="col-md-1 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Listado</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Imnueble</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Estatus</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Fecha programada</span>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Fecha entrega</span>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Acuse</span>
+                                        </div>
+                                        <!--<div class="col-md-2 col-sm-6 col-6">
+                                            <span class="text-white d-none d-md-block">Calif. General</span>
+                                        </div>-->
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row"></div>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let e of model.listas">
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-1 col-sm-6 col-2">
+                                            <span class="badge d-md-none">Id listado:</span>
+                                            <div>{{ e.idListado }}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="badge d-md-none">Inmueble:</span>
+                                            <div>{{ e.inmueble }}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-2">
+                                            <span class="badge d-md-none">Estatus:</span>
+                                            <div>{{ e.estatus }}</div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="badge d-md-none">Fecha programada:</span>
+                                            <div [ngClass]="{'text-muted': e.fechaProgramada === 'No programada'}">{{ e.fechaProgramada }}</div>
+                                        </div>
+
+                                        <div class="col-md-2 col-sm-6 col-6">
+                                            <span class="badge d-md-none">Fecha entrega:</span>
+                                            <div [ngClass]="{'text-muted': e.fechaEntrega === 'Sin entregar'}">{{ e.fechaEntrega }}</div>
+                                        </div>
+
+                                        <div class="col-md-3 col-sm-6 col-6">
+                                            <span class="badge d-md-none">Acuse de entrega:</span>
+                                            <div [ngClass]="{'text-muted': e.acuseEntrega === 'Sin acuse'}">{{ e.acuseEntrega }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div *ngIf="e.acuseEntrega != 'Sin acuse'" class="col-12 col-md-12 col-sm-12">
+                                            <button type="button" class="btn btn-lg text-primary" (click)="getImage(e.acuseEntrega, e.carpeta)" data-bs-toggle="tooltip" title="Ver">
+                                                <i class="fa-solid fa-eye" style="color: #565658;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="model.listas && model.listas.length > 0">
+                    <br />
+                    <pagina-widget [pagina]="model.pagina" [numPaginas]="model.numPaginas" [rows]="model.rows" (chgEvent)="muevePagina($event)"></pagina-widget>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="row"></div>
+                <button type="button" (click)="close()" class="btn btn-outline-secondary"> Regresar</button>
+            </div>
+        </div>
+    </div>
+</div>
