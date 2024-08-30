@@ -43,11 +43,16 @@ SELECT
 per_usuario Identificador, 
 per_nombre Nombre, 
 idpersonal as IdPersonal,
-per_interno as IdInterno, 
+id_cliente as IdInterno, 
 per_status Estatus, 
 id_empleado as IdEmpleado
-FROM personal where per_usuario = @Usuario and per_password = @Contrasena
-"; // and per_status=0
+FROM personal 
+where 
+per_usuario = @Usuario and 
+per_password = @Contrasena AND
+Per_Interno = 1 AND
+id_proveedor = 0
+";
 
             using (var connection = _ctx.CreateConnection())
             {
