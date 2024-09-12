@@ -9,5 +9,6 @@
         public int IdEmpleado { get; set; }
         public int Estatus { get; set; }
         public int IdProveedor { get; set;}
+        public int IdCliente { get; set; }
     }
 }

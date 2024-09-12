@@ -38,8 +38,14 @@ namespace SistemaClientesBatia.Controllers
             return await _logic.GetSucursales(idCliente);
         }
 
+        [HttpPost("[action]")]
+        public async Task<List<RegistroAsistenciaDTO>> GetRegistroAsistencia(ParamDashboardDTO param)
+        {
+            return await _logic.GetRegistroAsistencia(param);
+        }
 
 
-        
+
+
     }
 }

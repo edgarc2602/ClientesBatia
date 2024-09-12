@@ -12,16 +12,19 @@ import { EvaluacionWidget } from '../../widgets/evaluacion/evaluacion.widget'
 import { SupervisionWidget } from '../../widgets/supervision/supervision.widget'
 import accessibility from 'highcharts/modules/accessibility';
 import { EntregaWidget } from '../../widgets/entrega/entrega.widget';
+import { RegistroAsistencia } from '../../models/registroasistencia';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'dashboard-comp',
     templateUrl: './dashboard.component.html',
     animations: [fadeInOut],
+    providers: [DatePipe],
 })
 export class DashboardComponent implements OnInit {
     mesesc: Catalogo[];
     param: ParamDashboard = {
-        mes: 0, anio: 0, idCliente: 0, idInmueble: 0
+        dia: 0, mes: 0, anio: 0, idCliente: this.user.idCliente, idInmueble: 0, fecha: ''
     }
     dashboard: Dashboard;
     idSucursal: number = 0;
@@ -29,15 +32,17 @@ export class DashboardComponent implements OnInit {
     selectedRow: any;
     sucursaln: string = '';
     sucursales: Sucursales[];
+    registroA: RegistroAsistencia[] = [];
+    fechaAsistencia: string = '';
     @ViewChild(EvaluacionWidget, { static: false }) EvaWid: EvaluacionWidget;
     @ViewChild(SupervisionWidget, { static: false }) SupWid: SupervisionWidget;
     @ViewChild(EntregaWidget, { static: false }) EntWid: EntregaWidget;
-    
-    constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser) {
+
+    constructor(@Inject('BASE_URL') private url: string, private http: HttpClient, public user: StoreUser, private dtpipe: DatePipe) {
         http.get<Catalogo[]>(`${url}api/catalogo/obtenermeses`).subscribe(response => {
             this.mesesc = response;
         })
-        
+
     }
 
     openSupervisionModal() {
@@ -59,45 +64,68 @@ export class DashboardComponent implements OnInit {
         this.param.anio = anioActual;
         const mesActual = new Date().getMonth() + 1;
         this.param.mes = mesActual;
+        const fechaActual = new Date();
+        this.fechaAsistencia = this.dtpipe.transform(fechaActual, 'yyyy-MM-dd')
         this.sucursaln = 'Total';
         this.getDashboard('Total');
         this.getSucursales();
         accessibility(Highcharts);
+        this.getRegistroAsistencia();
     }
 
     getSucursales() {
-        this.param.idCliente = this.user.idInterno;
-        this.http.get<Sucursales[]>(`api/usuario/GetSucursales/${this.user.idInterno}`).subscribe(response => {
+        this.http.get<Sucursales[]>(`api/usuario/GetSucursales/${this.user.idCliente}`).subscribe(response => {
             this.sucursales = response;
         })
     }
 
     limpiarParam() {
         this.param = {
-            mes: 0, anio: 0, idCliente: 0, idInmueble: 0
+            dia: 0, mes: 0, anio: 0, idCliente: this.user.idCliente, idInmueble: 0, fecha: ''
         }
     }
 
     selectSucursal(sucursal: any, nombre: string) {
-        this.selectedRow = sucursal;
-        this.idSucursal = sucursal.idSucursal;
-        this.sucursaln = sucursal.sucursal;
-        this.getDashboard(this.sucursaln);
+        if (this.isLoading == false) {
+            if (this.idSucursal != sucursal.idSucursal) {
+                this.selectedRow = sucursal;
+                this.idSucursal = sucursal.idSucursal;
+                this.sucursaln = sucursal.sucursal;
+                this.getDashboard(this.sucursaln);
+                this.getRegistroAsistencia();
+            }
+
+        }
+
+    }
+    getRegistroAsistencia() {
+        this.param.fecha = this.fechaAsistencia;
+        this.http.post<RegistroAsistencia[]>(`${this.url}api/usuario/GetRegistroAsistencia`, this.param).subscribe(response => {
+            this.registroA = response;
+            this.isLoading = false;
+        }, err => {
+            this.isLoading = false;
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrio un error al consultar el detalle',
+                icon: 'error',
+                timer: 3000,
+                showConfirmButton: false,
+            });
+        });
     }
 
     getDashboard(sucursaln: string) {
         sucursaln = this.sucursaln;
         this.isLoading = true;
         this.param.idInmueble = this.idSucursal;
-        this.param.idCliente = this.user.idInterno;
-        this.dashboard = {
-            asistencia: 0, entregas: 0, supervision: 0, evaluaciones: 0, asistenciaMes: [], incidencia: []
-        };
+        //this.dashboard = {
+        //    asistencia: 0, entregas: 0, supervision: 0, evaluaciones: 0, asistenciaMes: [], incidencia: []
+        //};
         this.http.post<Dashboard>(`${this.url}api/usuario/getDashboard`, this.param).subscribe(response => {
             this.dashboard = response;
             this.graficaAsistenciaMes(sucursaln);
             this.graficaIncidencia();
-            this.isLoading = false;
         }, err => {
             this.isLoading = false;
             console.log(err)
@@ -111,25 +139,24 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    getDashboard2() {
-        this.isLoading = true;
-        this.param.idInmueble = this.idSucursal;
-        this.param.idCliente = this.user.idInterno;
-        this.http.post<Dashboard>(`${this.url}api/usuario/GetDashboardData`, this.param).subscribe(response => {
-            this.dashboard = response;
-            this.isLoading = false;
-        }, err => {
-            this.isLoading = false;
-            console.log(err)
-            Swal.fire({
-                title: 'Error',
-                text: 'Ocurrio un error al consultar la informacion',
-                icon: 'error',
-                timer: 3000,
-                showConfirmButton: false,
-            });
-        });
-    }
+    //getDashboard2() {
+    //    this.isLoading = true;
+    //    this.param.idInmueble = this.idSucursal;
+    //    this.http.post<Dashboard>(`${this.url}api/usuario/GetDashboardData`, this.param).subscribe(response => {
+    //        this.dashboard = response;
+    //        this.isLoading = false;
+    //    }, err => {
+    //        this.isLoading = false;
+    //        console.log(err)
+    //        Swal.fire({
+    //            title: 'Error',
+    //            text: 'Ocurrio un error al consultar la informacion',
+    //            icon: 'error',
+    //            timer: 3000,
+    //            showConfirmButton: false,
+    //        });
+    //    });
+    //}
 
     graficaAsistenciaMes(sucursaln: string) {
         let container: HTMLElement = document.getElementById('GAM');
@@ -246,6 +273,8 @@ export class DashboardComponent implements OnInit {
                 enabled: false
             }
         });
+        this.isLoading = false;
+
     }
 
     regresaEva() {

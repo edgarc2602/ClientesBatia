@@ -17,6 +17,7 @@ export class ExclusivoComponent {
             this.user.idEmpleado = uST.idEmpleado;
             this.user.estatus = uST.estatus;
             this.user.idProveedor = uST.idProveedor;
+            this.user.idCliente = uST.idCliente;
         }
     }
 

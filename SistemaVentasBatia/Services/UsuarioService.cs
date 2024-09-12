@@ -21,6 +21,7 @@ namespace SistemaClientesBatia.Services
         Task<bool> Existe(AccesoDTO dto);
         Task<ActionResult<DashboardDTO>> GetDashboard(ParamDashboardDTO param);
         Task<List<SucursalesDTO>> GetSucursales(int idCliente);
+        Task<List<RegistroAsistenciaDTO>> GetRegistroAsistencia(ParamDashboardDTO param);
     }
     public class UsuarioService : IUsuarioService
     {
@@ -101,22 +102,42 @@ namespace SistemaClientesBatia.Services
         }
         public async Task<ActionResult<DashboardDTO>> GetDashboard(ParamDashboardDTO param)
         {
-            var dashboard = new DashboardDTO();
-            dashboard.Asistencia = await _repo.GetAsistenciaInd(param);
-            dashboard.Entregas = await _repo.GetEntregasInd(param);
-            dashboard.Supervision = await _repo.GetSupervisionInd(param);
-            dashboard.Evaluaciones = await _repo.GetEvaluacionesInd(param);
-            var asistenciaMes = _mapper.Map <List<AsistenciaMesDTO>>(await _repo.GetAsistenciaMes(param));
-            dashboard.AsistenciaMes = asistenciaMes;
-            var incidencia = _mapper.Map <List<IncidenciaDTO>>(await _repo.GetIncidencia(param));
-            dashboard.Incidencia = incidencia;
-            return dashboard;
+            
+            try
+            {
+                var dashboard = new DashboardDTO
+                {
+                    Asistencia = await _repo.GetAsistenciaInd(param),
+                    Entregas = await _repo.GetEntregasInd(param),
+                    Supervision = await _repo.GetSupervisionInd(param),
+                    Evaluaciones = await _repo.GetEvaluacionesInd(param),
+                    AsistenciaMes = _mapper.Map<List<AsistenciaMesDTO>>(await _repo.GetAsistenciaMes(param)),
+                    Incidencia = _mapper.Map<List<IncidenciaDTO>>(await _repo.GetIncidencia(param))
+
+                };            
+                return dashboard;
+
+            }
+            catch (Exception ex)
+            {
+                throw new CustomException("Error");
+            }
+
+
         }
 
         public async Task<List<SucursalesDTO>> GetSucursales(int idCliente)
         {
-            var sucursales = _mapper.Map<List<SucursalesDTO>>(await _repo.GetSucursalesidCliente(idCliente));
-            return sucursales;
+            return _mapper.Map<List<SucursalesDTO>>(await _repo.GetSucursalesidCliente(idCliente));
+        }
+
+        public async Task<List<RegistroAsistenciaDTO>> GetRegistroAsistencia(ParamDashboardDTO param)
+        {
+            DateTime fecha = DateTime.ParseExact(param.Fecha, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            int dia = fecha.Day;
+            int mes = fecha.Month;
+            int anio = fecha.Year;
+            return _mapper.Map<List<RegistroAsistenciaDTO>>(await _repo.GetRegistroAsistencia(param, dia, mes, anio));
         }
     }
 }

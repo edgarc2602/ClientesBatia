@@ -18,7 +18,7 @@ export class EvaluacionWidget {
         evaluaciones: [], pagina: 1, numPaginas: 0, rows: 0
     }
     param: ParamDashboard = {
-        mes: 0, anio: 0, idCliente: 0, idInmueble: 0
+        dia: 0, mes: 0, anio: 0, idCliente: this.user.idCliente, idInmueble: 0, fecha: ''
     }
     mesesc: Catalogo[];
     isLoading: boolean = false;
@@ -33,7 +33,6 @@ export class EvaluacionWidget {
         this.limpiarParam();
         this.param.anio = anio;
         this.param.mes = mes;
-        this.param.idCliente = this.user.idInterno;
         this.param.idInmueble = idSucursal;
         this.obtenerEvaluaciones(1);
         let docModal = document.getElementById('modalEvaluacion');
@@ -43,7 +42,7 @@ export class EvaluacionWidget {
 
     limpiarParam() {
         this.param = {
-            mes: 0, anio: 0, idCliente: 0, idInmueble: 0
+            dia: 0, mes: 0, anio: 0, idCliente: this.user.idCliente, idInmueble: 0, fecha: ''
         }
     }
 

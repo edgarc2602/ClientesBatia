@@ -1,23 +1,22 @@
 <header class="sticky-container">
-    <nav class="navbar navbar-expand-lg sticky-top flex-md-nowrap p-xl-0 shadow-sm">
+    <nav class="navbar navbar-expand-xl sticky-top flex-md-nowrap p-xl-0 shadow-sm">
         <div class="container-fluid">
-            <div class="d-none d-md-block">
+            <div class="d-none d-xl-block">
                 <a>
-                    <img src="images/batia_logo.png" style="width:45%; height:45%;" />
+                    <img src="images/batia_logo.png" style="width:45%; height:90%;" />
                 </a>
             </div>
-            <div class="navbar w-100" style="height:60px;">
+            <div class="navbar w-100" style="height:60px; background-color:transparent; backdrop-filter: none">
                 <div>
-                    <button class=" d-md-none collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation" (click)="button()">
+                    <button class=" d-xl-none collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation" (click)="button()">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
-                <div class="float-right">
+                <div class="float-right d-flex align-items-center">
                     Bienvenido(a), {{ user.nombre }}
                     <button type="button" (click)="logout()" class="btn btn-outline-warning mx-1">Salir</button>
                 </div>
             </div>
         </div>
     </nav>
-</header>   
-  
+</header>

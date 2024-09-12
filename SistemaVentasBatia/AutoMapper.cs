@@ -30,6 +30,8 @@ namespace SistemaClientesBatia
             CreateMap<SupervisionDTO,Supervision>();
             CreateMap<Listados,ListadosDTO>();
             CreateMap<ListadosDTO,Listados>();
+            CreateMap<RegistroAsistencia, RegistroAsistenciaDTO>();
+            CreateMap<RegistroAsistenciaDTO,RegistroAsistencia>();
         }
     }
 }
