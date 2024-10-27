@@ -25,6 +25,10 @@ namespace SistemaClientesBatia.Repositories
         Task<List<Incidencia>> GetIncidencia(ParamDashboardDTO param);
         Task<List<Sucursales>> GetSucursalesidCliente(int idCliente);
         Task<List<RegistroAsistencia>> GetRegistroAsistencia(ParamDashboardDTO param, int dia, int mes, int anio);
+        Task<List<RegistroAsistencia>> GetListaA(ParamDashboardDTO param);
+        Task<List<RegistroAsistencia>> GetListaA4(ParamDashboardDTO param);
+        Task<List<RegistroAsistencia>> GetListaA4Nocturno(ParamDashboardDTO param, List<int> lista);
+        Task<List<RegistroAsistencia>> GetListaAJornal(ParamDashboardDTO param);
     }
 
     public class UsuarioRepository : IUsuarioRepository
@@ -104,88 +108,72 @@ namespace SistemaClientesBatia.Repositories
             }
             query += @"
                 SELECT (
-                    CAST((
-                        -- Sumar asistencias de empleados y jornaleros
-                        SELECT *
-                            -- Asistencias únicas de empleados
-                            --COUNT(*)
-                        FROM (
-                            SELECT 
-				                SUM(ISNULL(emp.Asistencia, 0) + ISNULL(jorn.Asistencia, 0)) AS Asistencia  -- Suma las asistencias de ambas tablas
-			                FROM (
-				                -- Subconsulta para asistencias de empleados-----------
-				                SELECT 
-					                COUNT(DISTINCT a.id_empleado) AS Asistencia
-				                FROM tb_empleado_asistencia a
-				                INNER JOIN tb_cliente_inmueble b 
-					                ON a.id_inmueble = b.id_inmueble
-				                WHERE 
-					                MONTH(a.fecha) = @Mes
-					                AND YEAR(a.fecha) = @Anio
-					                AND ISNULL(NULLIF(@IdCliente ,0), b.id_cliente) = b.id_cliente
-					                AND ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
-					                AND a.movimiento IN ('A','A4')
-				                GROUP BY DAY(a.fecha)
-				                --------------------------------------------------------
-			                ) AS emp
-			                FULL OUTER JOIN (
-				                -- Subconsulta para asistencias de jornaleros------------
-				                SELECT 
-					                COUNT(DISTINCT a.id_jornalero) AS Asistencia
-				                FROM tb_jornalero_asistencia a
-				                INNER JOIN tb_cliente_inmueble b 
-					                ON a.id_inmueble = b.id_inmueble
-				                WHERE 
-					                MONTH(a.fecha) = @Mes
-					                AND YEAR(a.fecha) = @Anio
-					                AND ISNULL(NULLIF(@IdCliente ,0), b.id_cliente) = b.id_cliente
-					                AND ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
-				                GROUP BY DAY(a.fecha)
-				                ---------------------------------------------------------
-			                ) AS jorn
-			                ON emp.Asistencia = jorn.Asistencia
-                        ) AS AsistenciasEmpleadosUnicas
-                    ) AS decimal(18, 2)) + 
-	                CAST((
-                        SELECT 
-				                SUM(ISNULL(descansos.Asistencia, 0)) AS Asistencia  -- Suma las asistencias de ambas tablas
-			                FROM (
-				                -- Subconsulta para asistencias de empleados-----------
-				                SELECT 
-					                COUNT(DISTINCT a.id_empleado) AS Asistencia
-				                FROM tb_empleado_asistencia a
-				                INNER JOIN tb_cliente_inmueble b 
-					                ON a.id_inmueble = b.id_inmueble
-				                WHERE 
-					                MONTH(a.fecha) = @Mes
-					                AND YEAR(a.fecha) = @Anio
-					                AND ISNULL(NULLIF(@IdCliente ,0), b.id_cliente) = b.id_cliente
-					                AND ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
-					                AND a.movimiento IN ('N')
-				                GROUP BY DAY(a.fecha)
-				                --------------------------------------------------------
-			                ) AS descansos
-                    ) AS decimal(18, 2))
-                ) / 
-                -- Cálculo del total de días multiplicado por la cantidad en plantilla
-                CAST((
-                    SELECT SUM(cantidad) 
-                    FROM tb_cliente_plantilla a 
-                    INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble  
-                    WHERE 
-                        b.id_cliente = @IdCliente
-                        AND a.id_status = 1
-                        AND ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
-                        AND b.id_status = 1 
-                ) * @dia AS decimal(18, 2)) * 100
-                 AS AsistenciaMensual";
+    CAST(( 
+        COALESCE((
+            -- Subconsulta para asistencias de empleados
+            SELECT SUM(ISNULL(emp.Asistencia, 0) + ISNULL(jorn.Asistencia, 0)) AS Asistencia
+            FROM (
+                -- Subconsulta de empleados
+                SELECT COUNT(DISTINCT a.id_empleado) AS Asistencia
+                FROM tb_empleado_asistencia a
+                INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+                WHERE MONTH(a.fecha) = @Mes AND YEAR(a.fecha) = @Anio
+                AND ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente
+                AND ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
+                AND a.movimiento IN ('A')
+                GROUP BY DAY(a.fecha)
+            ) AS emp
+            FULL OUTER JOIN (
+                -- Subconsulta de jornaleros
+                SELECT COUNT(DISTINCT a.id_jornalero) AS Asistencia
+                FROM tb_jornalero_asistencia a
+                INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+                WHERE MONTH(a.fecha) = @Mes AND YEAR(a.fecha) = @Anio
+                AND ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente
+                AND ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
+                GROUP BY DAY(a.fecha)
+            ) AS jorn
+            ON emp.Asistencia = jorn.Asistencia
+        ), 0)  -- Valor por defecto si la subconsulta retorna NULL
+    ) AS decimal(18, 2)) + 
+    CAST((
+        COALESCE((
+            -- Subconsulta para asistencias de descansos
+            SELECT SUM(ISNULL(descansos.Asistencia, 0)) AS Asistencia
+            FROM (
+                -- Subconsulta de empleados
+                SELECT COUNT(DISTINCT a.id_empleado) AS Asistencia
+                FROM tb_empleado_asistencia a
+                INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+                WHERE MONTH(a.fecha) = @Mes AND YEAR(a.fecha) = @Anio
+                AND ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente
+                AND ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
+                AND a.movimiento IN ('N')
+                GROUP BY DAY(a.fecha)
+            ) AS descansos
+        ), 0)  -- Valor por defecto si la subconsulta retorna NULL
+    ) AS decimal(18, 2))
+) /
+CAST(COALESCE((
+    -- Cálculo del total de días
+    SELECT SUM(cantidad)
+    FROM tb_cliente_plantilla a
+    INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+    WHERE b.id_cliente = @IdCliente AND a.id_status = 1
+    AND ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
+    AND b.id_status = 1
+) * @dia, 1) AS decimal(18, 2))  -- Valor por defecto de 1 para evitar división por 0
+* 100 AS AsistenciaMensual";
+
 
             try
             {
                 using (var connection = _ctx.CreateConnection())
                 {
                     cumplimiento = await connection.QueryFirstAsync<decimal>(query, param);
+                    
                     cumplimiento = Math.Round(cumplimiento, 2);
+                    
                 }
             }
             catch (Exception ex)
@@ -314,7 +302,7 @@ and month(fecha) = @Mes
                         AND YEAR(a.fecha) = @Anio
                         AND ISNULL(NULLIF(@IdCliente ,0), b.id_cliente) = b.id_cliente
                         AND ISNULL(NULLIF(@IdInmueble,0), a.id_inmueble) = a.id_inmueble
-                        AND a.movimiento IN ('A','A4')
+                        AND a.movimiento IN ('A')
                     GROUP BY DAY(a.fecha)
 	                --------------------------------------------------------
                 ) AS emp
@@ -463,42 +451,54 @@ FROM (
         {
             string query = @"
             SELECT 
-                a.id_empleado AS IdEmpleado,
-                c.nombre + ' ' + c.paterno + ' ' + c.materno AS Nombre,
-                MIN(CASE WHEN a.movimiento = 'A' THEN a.fecha END) AS HoraEntrada, -- La primera hora de asistencia (entrada)
-                MAX(CASE WHEN a.movimiento = 'A4' THEN a.fecha END) AS HoraSalida,  -- La última hora de asistencia (salida),
-	            0 AS Jornal 
-            FROM tb_empleado_asistencia a 
-            INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
-            INNER JOIN tb_empleado c ON c.id_empleado = a.id_empleado
-            WHERE 
-                MONTH(a.fecha) = @mes AND 
-                YEAR(a.fecha) = @anio AND 
-                DAY(a.fecha) = @dia AND
-                ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente AND 
-                ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble AND 
-                a.movimiento IN ('A','A4')
-            GROUP BY 
-                a.id_empleado, 
-                c.nombre, c.paterno, c.materno
+	    a.fecha AS Fecha,
+        a.id_empleado AS IdEmpleado,
+	    d.nombre AS Inmueble,
+	    e.descripcion AS Puesto,
+        c.nombre + ' ' + c.paterno + ' ' + c.materno AS Nombre,
+        MIN(CASE WHEN a.movimiento = 'A' THEN a.fecha END) AS HoraEntrada, -- La primera hora de asistencia (entrada)
+        MAX(CASE WHEN a.movimiento = 'A4' THEN a.fecha END) AS HoraSalida,  -- La última hora de asistencia (salida),
+        0 AS Jornal 
+    FROM tb_empleado_asistencia a 
+    INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+    INNER JOIN tb_empleado c ON c.id_empleado = a.id_empleado
+    INNER JOIN tb_cliente_inmueble d ON d.id_inmueble = a.id_inmueble
+    INNER JOIN tb_puesto e ON e.id_puesto = c.id_puesto
+    WHERE 
+        MONTH(a.fecha) = @mes AND 
+        YEAR(a.fecha) = @anio AND 
+        DAY(a.fecha) = @dia AND
+        ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente AND 
+        ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble AND 
+        a.movimiento IN ('A')
+    GROUP BY 
+    d.nombre,
+    e.descripcion,
+	    a.fecha,
+        a.id_empleado, 
+        c.nombre, c.paterno, c.materno
 
-            UNION ALL
+    UNION ALL
 
-            SELECT 
-            a.id_jornalero AS IdEmpleado,
-            b.nombre + ' ' + b.paterno + ' ' + b.materno AS Nombre,
-            fecha AS HoraEntrada,
-            fecha AS HoraSalida,
-            1 AS Jornal 
-            FROM tb_jornalero_asistencia a
-            INNER JOIN tb_jornalero b ON a.id_jornalero = b.id_jornalero
-            WHERE 
-                MONTH(a.fecha) = @mes AND 
-                YEAR(a.fecha) = @anio AND 
-                DAY(a.fecha) = @dia AND
-                ISNULL(NULLIF(@IdCliente, 0), a.id_cliente) = a.id_cliente AND 
-                ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
-            ORDER BY Nombre";
+    SELECT 
+    a.fecha AS Fecha,
+    a.id_jornalero AS IdEmpleado,
+    d.nombre AS Inmueble,
+    'Jornalero' AS Puesto,
+    b.nombre + ' ' + b.paterno + ' ' + b.materno AS Nombre,
+    fecha AS HoraEntrada,
+    fecha AS HoraSalida,
+    1 AS Jornal 
+    FROM tb_jornalero_asistencia a
+    INNER JOIN tb_jornalero b ON a.id_jornalero = b.id_jornalero
+    INNER JOIN tb_cliente_inmueble d ON d.id_inmueble = a.id_inmueble
+    WHERE 
+        MONTH(a.fecha) = @mes AND 
+        YEAR(a.fecha) = @anio AND 
+        DAY(a.fecha) = @dia AND
+        ISNULL(NULLIF(@IdCliente, 0), a.id_cliente) = a.id_cliente AND 
+        ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
+    ORDER BY Nombre";
             try
             {
                 using (var connection = _ctx.CreateConnection())
@@ -512,5 +512,199 @@ FROM (
                 throw new CustomException("Error al obtener detalle de asistencia");
             }
         }
+
+        public async Task<List<RegistroAsistencia>> GetListaA(ParamDashboardDTO param)
+        {
+            string query = @"
+                WITH RegistroUnico AS (
+    SELECT 
+        a.fecha AS Fecha,
+        b.nombre AS Inmueble,
+        a.id_empleado AS IdEmpleado,
+        c.nombre + ' ' + c.paterno + ' ' + c.materno AS Nombre,
+        e.descripcion AS Puesto,
+        c.ss AS Nss,
+        a.id_inmueble AS IdInmueble,
+        f.id_inmueble,
+        a.movimiento AS Movimiento,
+        a.fecha AS HoraEntrada,
+        f.id_turno AS IdTurno,
+        g.descripcion AS Turno,
+        ROW_NUMBER() OVER(PARTITION BY a.id_empleado ORDER BY a.fecha) AS RowNum
+    FROM tb_empleado_asistencia a 
+    INNER JOIN tb_cliente_inmueble b ON a.id_inmueble = b.id_inmueble
+    INNER JOIN tb_empleado c ON a.id_empleado = c.id_empleado
+    INNER JOIN tb_puesto e ON c.id_puesto = e.id_puesto
+    INNER JOIN tb_cliente_plantilla f ON c.id_plantilla = f.id_plantilla
+    INNER JOIN tb_turno g ON f.id_turno = g.id_turno
+    WHERE 
+        DAY(a.fecha) = @Dia AND
+        MONTH(a.fecha) = @Mes AND 
+        YEAR(a.fecha) = @Anio AND 
+        ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente AND 
+        ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble AND
+        a.movimiento = 'A'
+)
+
+SELECT *
+FROM RegistroUnico
+WHERE RowNum = 1
+ORDER BY Inmueble, Nombre;
+            ";
+            try
+            {
+                using (var connection = _ctx.CreateConnection())
+                {
+                    var list = (await connection.QueryAsync<RegistroAsistencia>(query, new { param.IdCliente, param.IdInmueble, param.Dia, param.Mes, param.Anio })).ToList();
+                    return list;
+                }
+            }
+            catch (Exception)
+            {
+                throw new CustomException("Error al obtener detalle de asistencia");
+            }
+        }
+
+        public async Task<List<RegistroAsistencia>> GetListaA4(ParamDashboardDTO param)
+        {
+            string query = @"
+                SELECT 
+a.fecha AS Fecha,
+b.nombre AS Inmueble,
+a.id_empleado AS IdEmpleado,
+c.nombre + ' ' + c.paterno + ' ' + c.materno AS Nombre,
+e.descripcion AS Puesto,
+c.ss AS Nss,
+a.id_inmueble AS IdInmueble,
+f.id_inmueble,
+a.movimiento AS Movimiento,
+a.fecha AS HoraSalida,
+f.id_turno AS IdTurno,
+g.descripcion AS Turno
+
+    FROM tb_empleado_asistencia a 
+    INNER JOIN tb_cliente_inmueble b ON a.id_inmueble =b.id_inmueble
+    INNER JOIN tb_empleado c ON a.id_empleado = c.id_empleado
+    INNER JOIN tb_puesto e ON c.id_puesto = e.id_puesto
+	INNER JOIN tb_cliente_plantilla f ON c.id_plantilla = f.id_plantilla
+	INNER JOIN tb_turno g ON f.id_turno = g.id_turno
+    WHERE 
+		DAY(a.fecha) = @Dia AND
+        MONTH(a.fecha) = @Mes AND 
+        YEAR(a.fecha) = @Anio AND 
+        ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente AND 
+        ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble AND
+		a.movimiento = 'A4'
+	ORDER BY b.nombre, c.nombre
+            ";
+            try
+            {
+                using (var connection = _ctx.CreateConnection())
+                {
+                    var list = (await connection.QueryAsync<RegistroAsistencia>(query, new { param.IdCliente, param.IdInmueble, param.Dia, param.Mes, param.Anio })).ToList();
+                    return list;
+                }
+            }
+            catch (Exception)
+            {
+                throw new CustomException("Error al obtener detalle de asistencia");
+            }
+        }
+
+        public async Task<List<RegistroAsistencia>> GetListaA4Nocturno(ParamDashboardDTO param, List<int> lista)
+        {
+            DateTime fechaSiguiente = ObtenerFechaSiguiente(param);
+            param.Anio = fechaSiguiente.Year;
+            param.Mes = fechaSiguiente.Month;
+            param.Dia = fechaSiguiente.Day;
+            string query = @"
+                SELECT 
+                    a.fecha AS Fecha,
+                    b.nombre AS Inmueble,
+                    a.id_empleado AS IdEmpleado,
+                    c.nombre + ' ' + c.paterno + ' ' + c.materno AS Nombre,
+                    e.descripcion AS Puesto,
+                    c.ss AS Nss,
+                    a.id_inmueble AS IdInmueble,
+                    f.id_inmueble,
+                    a.movimiento AS Movimiento,
+                    a.fecha AS HoraSalida,
+                    f.id_turno AS IdTurno,
+                    g.descripcion AS Turno
+                FROM tb_empleado_asistencia a 
+                INNER JOIN tb_cliente_inmueble b ON a.id_inmueble =b.id_inmueble
+                INNER JOIN tb_empleado c ON a.id_empleado = c.id_empleado
+                INNER JOIN tb_puesto e ON c.id_puesto = e.id_puesto
+                INNER JOIN tb_cliente_plantilla f ON c.id_plantilla = f.id_plantilla
+                INNER JOIN tb_turno g ON f.id_turno = g.id_turno
+                WHERE 
+                    DAY(a.fecha) = @Dia AND
+                    MONTH(a.fecha) = @Mes AND 
+                    YEAR(a.fecha) = @Anio AND 
+                    ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente AND 
+                    ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble AND
+                    a.movimiento = 'A4' AND
+                    a.id_empleado IN @ListaIds
+                ORDER BY b.nombre, c.nombre
+            ";
+            try
+            {
+                using (var connection = _ctx.CreateConnection())
+                {
+                    var list = (await connection.QueryAsync<RegistroAsistencia>(query, new { param.IdCliente, param.IdInmueble, param.Dia, param.Mes, param.Anio, listaIds = lista })).ToList();
+                    return list;
+                }
+            }
+            catch (Exception)
+            {
+                throw new CustomException("Error al obtener detalle de asistencia");
+            }
+        }
+
+        public async Task<List<RegistroAsistencia>> GetListaAJornal(ParamDashboardDTO param)
+        {
+            string query = @"
+                SELECT 
+                a.fecha AS Fecha,
+                a.id_jornalero AS IdEmpleado,
+                d.nombre AS Inmueble,
+                'Jornalero' AS Puesto,
+                b.nombre + ' ' + b.paterno + ' ' + b.materno AS Nombre,
+                a.fecha AS HoraEntrada,
+                a.fecha AS HoraSalida,
+                1 AS Jornal,
+	            'A' AS	Movimiento,
+	            e.descripcion AS Turno
+                FROM tb_jornalero_asistencia a
+                INNER JOIN tb_jornalero b ON a.id_jornalero = b.id_jornalero
+                INNER JOIN tb_cliente_inmueble d ON d.id_inmueble = a.id_inmueble
+	            INNER JOIN tb_turno e ON e.id_turno = a.id_turno 
+                WHERE 
+                    MONTH(a.fecha) = @Mes AND 
+                    YEAR(a.fecha) = @Anio AND 
+                    DAY(a.fecha) = @Dia AND
+                    ISNULL(NULLIF(@IdCliente, 0), a.id_cliente) = a.id_cliente AND 
+                    ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble
+                ORDER BY Nombre
+            ";
+            try
+            {
+                using (var connection = _ctx.CreateConnection())
+                {
+                    var list = (await connection.QueryAsync<RegistroAsistencia>(query, new { param.IdCliente, param.IdInmueble, param.Dia, param.Mes, param.Anio })).ToList();
+                    return list;
+                }
+            }
+            catch (Exception)
+            {
+                throw new CustomException("Error al obtener detalle de asistencia");
+            }
+        }
+        private DateTime ObtenerFechaSiguiente(ParamDashboardDTO param)
+        {
+            DateTime fechaActual = new DateTime(param.Anio, param.Mes, param.Dia);
+            return fechaActual.AddDays(1); // Incrementa un día, considerando cambios de mes y año
+        }
+
     }
 }

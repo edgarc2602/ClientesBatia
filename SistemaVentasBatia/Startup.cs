@@ -16,6 +16,7 @@ using SistemaClientesBatia.Repositories;
 using SistemaClientesBatia.Converters;
 using SistemaClientesBatia.Middleware;
 using SistemaClientesBatia.Controllers;
+using OfficeOpenXml;
 
 
 namespace SistemaClientesBatia
@@ -75,7 +76,8 @@ namespace SistemaClientesBatia
             services.AddScoped<IEvaluacionRepository, EvaluacionRepository>();
             services.AddScoped<IEntregaRepository, EntregaRepository>();
 
-
+            //Excel
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

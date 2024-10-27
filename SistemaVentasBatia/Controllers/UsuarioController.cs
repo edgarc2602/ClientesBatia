@@ -44,7 +44,14 @@ namespace SistemaClientesBatia.Controllers
             return await _logic.GetRegistroAsistencia(param);
         }
 
+        [HttpPost("[action]/{idCliente}/{idSucursal}/{fechaAsistencia}")]
+        public async Task<FileContentResult> DescargarAsistencia(int idCliente,int idSucursal, string fechaAsistencia)
+        {
+            byte[] fileContents = await _logic.DescargarAsistencia(idCliente, idSucursal, fechaAsistencia);
 
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "archivo.xlsx");
+
+        }
 
 
     }

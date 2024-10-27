@@ -14,6 +14,7 @@ import accessibility from 'highcharts/modules/accessibility';
 import { EntregaWidget } from '../../widgets/entrega/entrega.widget';
 import { RegistroAsistencia } from '../../models/registroasistencia';
 import { DatePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'dashboard-comp',
@@ -284,4 +285,38 @@ export class DashboardComponent implements OnInit {
     regresaSup() {
 
     }
+
+    DescargarAsistencia() {
+        this.isLoading = true;
+        this.http.post(`${this.url}api/usuario/DescargarAsistencia/${this.user.idCliente}/${this.idSucursal}/${this.fechaAsistencia}`, null, { responseType: 'blob' }).subscribe((response: Blob) => {
+            saveAs(response, 'ReporteAsistencia:' + this.fechaAsistencia +'.xlsx');
+            this.isLoading = false;
+        },
+            error => {
+                console.error('Error al descargar el archivo:', error);
+                this.isLoading = false;
+            }
+        );
+    }
+    formatHoraSalida(fecha: string): string {
+        if (fecha === '0001-01-01T00:00:00') {
+            return 'N/A';
+        } else {
+            const fechaObj = new Date(fecha);
+            let formattedDate = fechaObj.toLocaleString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            // Usar una expresión regular para asegurarse de reemplazar bien "a. m." y "p. m." con "AM" y "PM"
+            return formattedDate.replace(/\sa\.?\s?m\.?/i, ' AM').replace(/\sp\.?\s?m\.?/i, ' PM');
+        }
+    }
+
+
+
 }

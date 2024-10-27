@@ -49,7 +49,7 @@
                         <div>
                             <i class="fa fa-calendar fa-2x" style="color: orangered;"></i>
                         </div>
-                        <div class="display-6">
+                        <div *ngIf="dashboard" class="display-6">
                             {{ dashboard.asistencia }}%
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <h5 class="card-title mb-4">Entregas</h5>
-                        <button *ngIf="dashboard.entregas != 0" type="button" (click)="openEntregaModal()" class="btn btn-outline-light btn-sm">
+                        <button *ngIf="dashboard && dashboard.entregas && dashboard.entregas != 0" type="button" (click)="openEntregaModal()" class="btn btn-outline-light btn-sm">
                             <i class="fa-solid fa-list fa-2x" style="color: purple;"></i>
                         </button>
                     </div>
@@ -69,7 +69,7 @@
                         <div>
                             <i class="fa fa-taxi fa-2x" style="color: aqua;"></i>
                         </div>
-                        <div class="display-6">
+                        <div *ngIf="dashboard" class="display-6">
                             {{ dashboard.entregas }}%
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <h5 class="card-title mb-4">Supervisión</h5>
-                        <button *ngIf="dashboard.supervision != 0" type="button" (click)="openSupervisionModal()" class="btn btn-outline-light btn-sm">
+                        <button *ngIf="dashboard && dashboard.supervision && dashboard.supervision != 0" type="button" (click)="openSupervisionModal()" class="btn btn-outline-light btn-sm">
                             <i class="fa-solid fa-list fa-2x" style="color: purple;"></i>
                         </button>
                     </div>
@@ -89,7 +89,7 @@
                         <div>
                             <i class="fa fa-users fa-2x" style="color: purple;"></i>
                         </div>
-                        <div class="display-6">
+                        <div *ngIf="dashboard" class="display-6">
                             {{ dashboard.supervision }}
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <h5 class="card-title mb-4">Evaluaciones</h5>
-                        <button *ngIf="dashboard.evaluaciones != 0" type="button" (click)="openEvaluacionModal()" class="btn btn-outline-light btn-sm">
+                        <button *ngIf="dashboard && dashboard.evaluaciones && dashboard.evaluaciones != 0" type="button" (click)="openEvaluacionModal()" class="btn btn-outline-light btn-sm">
                             <i class="fa-solid fa-list fa-2x" style="color: green;"></i>
                         </button>
                     </div>
@@ -110,7 +110,7 @@
                         <div>
                             <i class="fa fa-thumbs-up fa-2x" style="color: green;"></i>
                         </div>
-                        <div class="display-6">
+                        <div *ngIf="dashboard" class="display-6">
                             {{ dashboard.evaluaciones }}
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 shadow-sm mb-3">
+            <div class="col-md-4 shadow-sm mb-3">
                 <div class="card text-center">
                     <div class="chart-title">Detalle registros de asistencia mensual</div>
                     <div class="chart-container">
@@ -185,7 +185,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-xl-6 shadow-sm mb-3">
+            <div class="col-md-8 col-xl-8 shadow-sm mb-3">
                 <div class="row d-flex align-items-center">
                     <div class="col-xl-8">
                         <div class="chart-title text-center">Asistencia diaria</div>
@@ -202,6 +202,7 @@
                                     <th class="text-center small">Ord</th>
                                     <th class="text-center small">Id</th>
                                     <th class="small">Nombre</th>
+                                    <th class="small">Turno</th>
                                     <th class="text-center small">H. Entrada</th>
                                     <th class="text-center small">H. Salida</th>
                                 </tr>
@@ -215,12 +216,16 @@
                                     <td class="col-xl-6 col-12 col-sm-2 col-md-6 small">
                                         {{ r.nombre }}
                                     </td>
-                                    <td *ngIf="r.jornal == 0" class="col-xl-2 col-12 col-sm-7 col-md-2 text-center small">
-                                        {{ r.horaEntrada | date:'HH:mm' }}
+                                    <td class="col-xl-6 col-12 col-sm-2 col-md-6 small">
+                                        {{ r.turno }}
                                     </td>
                                     <td *ngIf="r.jornal == 0" class="col-xl-2 col-12 col-sm-7 col-md-2 text-center small">
-                                        {{ r.horaSalida | date:'HH:mm' }}
+                                        {{ r.horaEntrada | date: 'dd/MM/yyyy hh:mm a' }}
                                     </td>
+                                    <td *ngIf="r.jornal == 0" class="col-xl-2 col-12 col-sm-7 col-md-2 text-center small">
+                                        {{ formatHoraSalida(r.horaSalida) }}
+                                    </td>
+
                                     <td *ngIf="r.jornal != 0" class="col-xl-2 col-12 col-sm-7 col-md-2 text-center small">
                                         <span class="small">Jornal</span>
                                     </td>
@@ -233,6 +238,12 @@
                     </div>
                     <div *ngIf="isLoading" class="overlay"></div>
                 </div>
+                <div *ngIf="registroA.length > 0" class="row">
+                    <div class="col-12 col-md-12 mb-3">
+                        <button type="button" (click)="DescargarAsistencia()" [disabled]="isLoading" class="btn btn-outline-secondary"><i class="fa-solid fa-file-excel fa-xl me-2"></i> Descargar</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

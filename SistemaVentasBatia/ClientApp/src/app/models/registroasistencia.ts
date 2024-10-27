@@ -4,4 +4,6 @@
     horaEntrada: Date;
     horaSalida: Date;
     jornal: boolean;
+    puesto: string;
+    turno: string;
 }

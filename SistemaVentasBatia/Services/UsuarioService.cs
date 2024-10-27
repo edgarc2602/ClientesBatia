@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IIS;
+using OfficeOpenXml;
 using SistemaClientesBatia.Controllers;
 using SistemaClientesBatia.DTOs;
 using SistemaClientesBatia.Models;
 using SistemaClientesBatia.Repositories;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -22,6 +26,7 @@ namespace SistemaClientesBatia.Services
         Task<ActionResult<DashboardDTO>> GetDashboard(ParamDashboardDTO param);
         Task<List<SucursalesDTO>> GetSucursales(int idCliente);
         Task<List<RegistroAsistenciaDTO>> GetRegistroAsistencia(ParamDashboardDTO param);
+        Task<byte[]> DescargarAsistencia(int idCliente, int idSucursal, string fechaAsistencia);
     }
     public class UsuarioService : IUsuarioService
     {
@@ -56,7 +61,7 @@ namespace SistemaClientesBatia.Services
 
         public async Task<UsuarioDTO> Login(AccesoDTO dto)
         {
-            dto.Contrasena = Encriptar(dto.Contrasena);
+            //dto.Contrasena = Encriptar(dto.Contrasena);
             UsuarioDTO usu;
             try
             {
@@ -118,9 +123,9 @@ namespace SistemaClientesBatia.Services
                 return dashboard;
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new CustomException("Error");
+                throw;
             }
 
 
@@ -137,7 +142,128 @@ namespace SistemaClientesBatia.Services
             int dia = fecha.Day;
             int mes = fecha.Month;
             int anio = fecha.Year;
-            return _mapper.Map<List<RegistroAsistenciaDTO>>(await _repo.GetRegistroAsistencia(param, dia, mes, anio));
+            //return _mapper.Map<List<RegistroAsistenciaDTO>>(await _repo.GetRegistroAsistencia(param, dia, mes, anio));
+            return await ObtenerRegistroAsistenciaPorPartes(param);
+        }
+
+        public async Task <List<RegistroAsistenciaDTO>> ObtenerRegistroAsistenciaPorPartes(ParamDashboardDTO param)
+        {
+            DateTime fecha = DateTime.ParseExact(param.Fecha, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            param.Dia = fecha.Day;
+            param.Mes = fecha.Month;
+            param.Anio = fecha.Year;
+
+
+            //OPERARIOS
+            var listaA = _mapper.Map<List<RegistroAsistenciaDTO>>(await _repo.GetListaA(param));
+
+            // Obtener la lista A4
+            var listaA4 = _mapper.Map<List<RegistroAsistenciaDTO>>(await _repo.GetListaA4(param));
+
+            var listaNocturnos = new List<int>();
+
+            // Actualizar la hora de salida y a su vez llenar arreglo de registros con idTurno = 3
+            foreach (var entrada in listaA)
+            {
+                if(entrada.IdTurno == 3)
+                {
+                    listaNocturnos.Add(entrada.IdEmpleado);
+                }
+                var salida = listaA4.FirstOrDefault(s => s.IdEmpleado == entrada.IdEmpleado);
+                if (salida != null)
+                {
+                    entrada.HoraSalida = salida.HoraSalida;
+                }
+            }
+            //Si existen registros con turno nocturno entonces proceder a consultar su registro de salida del dia siguiente y agregarlo a la lista principal "listaA"
+            if (listaNocturnos.Count != 0)
+            {
+                var listaA4N = _mapper.Map<List<RegistroAsistenciaDTO>>(await _repo.GetListaA4Nocturno(param, listaNocturnos));
+                if (listaA4N.Count != 0)
+                {
+                    foreach (var entrada in listaA)
+                    {
+                        var salida = listaA4N.FirstOrDefault(s => s.IdEmpleado == entrada.IdEmpleado);
+                        if (salida != null)
+                        {
+                            entrada.HoraSalida = salida.HoraSalida;
+                        }
+                    }
+                }
+            }
+
+
+
+            //JORNALES
+            //get registros de jornaleros
+            var listaAJornal = _mapper.Map<List<RegistroAsistenciaDTO>>(await _repo.GetListaAJornal(param));
+
+            // Agregar registros de listaAJornal a listaA
+            if(listaAJornal.Count != 0)
+            {
+                listaA.AddRange(listaAJornal);
+            }
+
+            // Ordenar la lista por Inmueble y Nombre
+            listaA = listaA.OrderBy(x => x.Inmueble).ThenBy(x => x.Nombre).ToList();
+
+            return listaA;
+        }
+
+        public async Task<byte[]> DescargarAsistencia(int idCliente, int idSucursal, string fechaAsistencia)
+        {
+            var param = new ParamDashboardDTO();
+            param.IdCliente = idCliente;
+            param.IdInmueble = idSucursal;
+            param.Fecha = fechaAsistencia;
+            string rutaArchivo = Path.Combine("Layouts", "ReporteAsistencia.xlsx");
+
+            try
+            {
+                using (var stream = new MemoryStream(File.ReadAllBytes(rutaArchivo)))
+                {
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        //Resumen
+
+                        DateTime fecha = DateTime.ParseExact(param.Fecha, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                        int dia = fecha.Day;
+                        int mes = fecha.Month;
+                        int anio = fecha.Year;
+                        var lista = _mapper.Map<List<RegistroAsistenciaDTO>>(await ObtenerRegistroAsistenciaPorPartes(param));
+
+                        if (lista.Count != 0)
+                        {
+                            var wsD = package.Workbook.Worksheets[0];
+                            int row = 2;
+                            foreach (var d in lista)
+                            {
+                                
+                                wsD.Cells[row, 1].Value = d.HoraEntrada;
+                                wsD.Cells[row, 2].Value = d.IdEmpleado;
+                                wsD.Cells[row, 3].Value = d.Nombre;
+                                wsD.Cells[row, 4].Value = d.Inmueble;
+                                wsD.Cells[row, 5].Value = d.Puesto;
+                                wsD.Cells[row, 6].Value = d.Turno;
+                                wsD.Cells[row, 7].Value = "";
+                                wsD.Cells[row, 8].Value = d.HoraEntrada != DateTime.MinValue ? d.HoraEntrada.ToString("HH:mm:ss tt") : "N/A";
+                                //wsD.Cells[row, 9].Value = d.HoraSalida;
+                                wsD.Cells[row, 9].Value = d.HoraSalida != DateTime.MinValue ? d.HoraSalida.ToString("HH:mm:ss tt") : "N/A";
+
+
+                                row++;
+                            }
+                        }
+                        return package.GetAsByteArray();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            
         }
     }
 }
