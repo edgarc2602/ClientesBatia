@@ -61,7 +61,7 @@ namespace SistemaClientesBatia.Services
 
         public async Task<UsuarioDTO> Login(AccesoDTO dto)
         {
-            //dto.Contrasena = Encriptar(dto.Contrasena);
+            dto.Contrasena = Encriptar(dto.Contrasena);
             UsuarioDTO usu;
             try
             {
@@ -172,7 +172,10 @@ namespace SistemaClientesBatia.Services
                 var salida = listaA4.FirstOrDefault(s => s.IdEmpleado == entrada.IdEmpleado);
                 if (salida != null)
                 {
-                    entrada.HoraSalida = salida.HoraSalida;
+                    if (salida.HoraSalida > entrada.HoraEntrada)
+                    {
+                        entrada.HoraSalida = salida.HoraSalida;
+                    }
                 }
             }
             //Si existen registros con turno nocturno entonces proceder a consultar su registro de salida del dia siguiente y agregarlo a la lista principal "listaA"
@@ -240,15 +243,16 @@ namespace SistemaClientesBatia.Services
                             {
                                 
                                 wsD.Cells[row, 1].Value = d.HoraEntrada;
-                                wsD.Cells[row, 2].Value = d.IdEmpleado;
-                                wsD.Cells[row, 3].Value = d.Nombre;
-                                wsD.Cells[row, 4].Value = d.Inmueble;
-                                wsD.Cells[row, 5].Value = d.Puesto;
-                                wsD.Cells[row, 6].Value = d.Turno;
-                                wsD.Cells[row, 7].Value = "";
-                                wsD.Cells[row, 8].Value = d.HoraEntrada != DateTime.MinValue ? d.HoraEntrada.ToString("HH:mm:ss tt") : "N/A";
+                                wsD.Cells[row, 2].Value = d.Inmueble;
+                                wsD.Cells[row, 3].Value = d.IdEmpleado;
+                                wsD.Cells[row, 4].Value = d.Nombre;
+                                wsD.Cells[row, 5].Value = d.Nss;
+                                wsD.Cells[row, 6].Value = d.Puesto;
+                                wsD.Cells[row, 7].Value = d.Turno;
+                                wsD.Cells[row, 8].Value = "";
+                                wsD.Cells[row, 9].Value = d.HoraEntrada != DateTime.MinValue ? d.HoraEntrada.ToString("dd-MM-yyyy HH:mm:ss tt") : "N/A";
                                 //wsD.Cells[row, 9].Value = d.HoraSalida;
-                                wsD.Cells[row, 9].Value = d.HoraSalida != DateTime.MinValue ? d.HoraSalida.ToString("HH:mm:ss tt") : "N/A";
+                                wsD.Cells[row, 10].Value = d.HoraSalida != DateTime.MinValue ? d.HoraSalida.ToString("dd-MM-yyyy HH:mm:ss tt") : "N/A";
 
 
                                 row++;

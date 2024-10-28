@@ -594,7 +594,8 @@ g.descripcion AS Turno
         YEAR(a.fecha) = @Anio AND 
         ISNULL(NULLIF(@IdCliente, 0), b.id_cliente) = b.id_cliente AND 
         ISNULL(NULLIF(@IdInmueble, 0), a.id_inmueble) = a.id_inmueble AND
-		a.movimiento = 'A4'
+		a.movimiento = 'A4' AND
+        f.id_turno != 3
 	ORDER BY b.nombre, c.nombre
             ";
             try
@@ -700,6 +701,7 @@ g.descripcion AS Turno
                 throw new CustomException("Error al obtener detalle de asistencia");
             }
         }
+
         private DateTime ObtenerFechaSiguiente(ParamDashboardDTO param)
         {
             DateTime fechaActual = new DateTime(param.Anio, param.Mes, param.Dia);
